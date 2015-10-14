@@ -1,0 +1,27 @@
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\bin\Debug\WHOis.exe
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\bin\Debug\WHOis.pdb
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\WHOis.Form1.resources
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\WHOis.exe
+c:\users\gr33nsynt4x\documents\visual studio 2010\Projects\WHOis\WHOis\obj\x86\Debug\WHOis.pdb
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.exe
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.pdb
+D:\WHOis\WHOis\WHOis\bin\Debug\WHOis.exe
+D:\WHOis\WHOis\WHOis\bin\Debug\WHOis.pdb
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.csprojResolveAssemblyReference.cache
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.Form1.resources
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
+D:\WHOis\WHOis\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
+D:\WHOis\WHOis\WHOis\bin\Debug\WHOis.exe.config
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\bin\Debug\WHOis.exe.config
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.exe
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.pdb
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.csprojResolveAssemblyReference.cache
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.MainForm.resources
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\bin\Debug\WHOis.exe
+D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\bin\Debug\WHOis.pdb
