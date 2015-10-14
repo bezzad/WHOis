@@ -34,3 +34,12 @@ D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.csprojResolveAssemblyReference.cache
 D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.MainForm.resources
 D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
 D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
+D:\Send Projects\WHOis\src\WHOis\bin\Debug\WHOis.exe.config
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.csprojResolveAssemblyReference.cache
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.MainForm.resources
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
+D:\Send Projects\WHOis\src\WHOis\bin\Debug\WHOis.exe
+D:\Send Projects\WHOis\src\WHOis\bin\Debug\WHOis.pdb
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.exe
+D:\Send Projects\WHOis\src\WHOis\obj\x86\Debug\WHOis.pdb
