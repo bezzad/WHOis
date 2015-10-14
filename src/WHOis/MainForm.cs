@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WHOis
 {
@@ -62,10 +63,16 @@ namespace WHOis
             }
         }
 
-        private void btnLookUp_Click(object sender, EventArgs e)
+        private void UiActivation(bool active)
+        {
+            InvokeIfRequire(() => cmbServer.Enabled = active);
+            InvokeIfRequire(() => grbExtensions.Enabled = active);
+        }
+
+        private async void btnLookUp_Click(object sender, EventArgs e)
         {
             InvokeIfRequire(() => dgvResult.Rows.Clear());
-            InvokeIfRequire(() => cmbServer.Enabled = false);
+            UiActivation(false);
 
             string[] names = txtHostName.Text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -87,7 +94,7 @@ namespace WHOis
                         server = "whois.nic.ir";
                     }
 
-                    var res = Whoise(name, extension, server);
+                    var res = await Whoise(name, extension, server);
 
                     extensionReserving.Add(extension, res);
 
@@ -96,6 +103,8 @@ namespace WHOis
 
                 Add(name, extensionReserving);
             }
+
+            UiActivation(true);
         }
 
 
@@ -119,74 +128,71 @@ namespace WHOis
         /// <param name="postfix"></param>
         /// <param name="server"></param>
         /// <returns>False if reserved and True if free</returns>
-        private bool Whoise(string name, string postfix, string server)
+        private async Task<bool> Whoise(string name, string postfix, string server)
         {
+            return await Task.Run(() =>
+             {
+                 string result = "";
+                 try
+                 {
+                     //CONNECT TO TCP CLIENT OF WHOIS
+                     tcpWhois = new TcpClient(server, 43);
 
-            string result = "";
-            try
-            {
-                //CONNECT TO TCP CLIENT OF WHOIS
-                tcpWhois = new TcpClient(server, 43);
+                     //SETUP THE NETWORK STREAM
+                     nsWhois = tcpWhois.GetStream();
 
-                //SETUP THE NETWORK STREAM
-                nsWhois = tcpWhois.GetStream();
+                     //GET THE DATA IN THE BUFFER FROM THE NETWORK STREAM
+                     bfWhois = new BufferedStream(nsWhois);
 
-                //GET THE DATA IN THE BUFFER FROM THE NETWORK STREAM
-                bfWhois = new BufferedStream(nsWhois);
+                     strmSend = new StreamWriter(bfWhois);
 
-                strmSend = new StreamWriter(bfWhois);
+                     strmSend.WriteLine(name + "." + postfix);
 
-                strmSend.WriteLine(name + "." + postfix);
+                     strmSend.Flush();
 
-                strmSend.Flush();
+                     try
+                     {
+                         strmRecive = new StreamReader(bfWhois);
+                         string response;
 
-                try
-                {
-                    strmRecive = new StreamReader(bfWhois);
-                    string response;
+                         while ((response = strmRecive.ReadLine()) != null)
+                         {
+                             result += response + "\r\n";
 
-                    while ((response = strmRecive.ReadLine()) != null)
-                    {
-                        result += response + "\r\n";
+                             if (result.Contains("No match for ") || result.Contains("no entries found"))
+                                 break;
+                         }
+                     }
+                     catch (Exception exp)
+                     {
+                         Log(string.Format("WHOis Server Error: {0}", exp.Message));
+                     }
+                 }
+                 catch (Exception exp)
+                 {
+                     Log(string.Format("No Internet Connection or Any other Fault. Error: {0}", exp.Message));
+                 }
 
-                        if (result.Contains("No match for ") || result.Contains("no entries found"))
-                            break;
-                    }
-                }
+                 //SEND THE WHO_IS SERVER ABOUT THE HOSTNAME
+                 finally
+                 {
+                     try
+                     {
+                         tcpWhois.Close();
+                     }
+                     catch (Exception exp)
+                     {
+                         Log(string.Format("Connection Closing Error: {0}", exp.Message));
+                     }
+                 }
 
-                catch
-                {
-                    MessageBox.Show("WHOis Server Error :x");
-                }
+                 return result.Contains("No match for ") || result.Contains("no entries found");
+             });
+        }
 
-            }
-
-            catch
-            {
-                MessageBox.Show("No Internet Connection or Any other Fault", "Error");
-            }
-
-            //SEND THE WHO_IS SERVER ABOUT THE HOSTNAME
-
-            finally
-            {
-                try
-                {
-                    tcpWhois.Close();
-                }
-                catch
-                {
-                }
-            }
-
-            if (result.Contains("No match for ") || result.Contains("no entries found"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        private void Log(string msg)
+        {
+            InvokeIfRequire(() => txtLogger.Text += string.Format("{0} {1} {0}", Environment.NewLine, msg));
         }
 
         public void InvokeIfRequire(Action act)

@@ -37,6 +37,12 @@
             this.txtHostName = new System.Windows.Forms.TextBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grbExtensions = new System.Windows.Forms.GroupBox();
+            this.chkCc = new System.Windows.Forms.CheckBox();
+            this.chkCom = new System.Windows.Forms.CheckBox();
+            this.chkInfo = new System.Windows.Forms.CheckBox();
+            this.chkIr = new System.Windows.Forms.CheckBox();
+            this.chkNet = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -44,18 +50,15 @@
             this.progResult = new System.Windows.Forms.ProgressBar();
             this.grbResult = new System.Windows.Forms.GroupBox();
             this.dgvResult = new System.Windows.Forms.DataGridView();
-            this.chkCom = new System.Windows.Forms.CheckBox();
-            this.chkIr = new System.Windows.Forms.CheckBox();
-            this.chkNet = new System.Windows.Forms.CheckBox();
-            this.chkInfo = new System.Windows.Forms.CheckBox();
-            this.chkCc = new System.Windows.Forms.CheckBox();
-            this.grbExtensions = new System.Windows.Forms.GroupBox();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtLogger = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
+            this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grbResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
-            this.grbExtensions.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -124,6 +127,79 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
             // 
+            // grbExtensions
+            // 
+            this.grbExtensions.Controls.Add(this.chkCc);
+            this.grbExtensions.Controls.Add(this.chkCom);
+            this.grbExtensions.Controls.Add(this.chkInfo);
+            this.grbExtensions.Controls.Add(this.chkIr);
+            this.grbExtensions.Controls.Add(this.chkNet);
+            this.grbExtensions.Location = new System.Drawing.Point(189, 96);
+            this.grbExtensions.Name = "grbExtensions";
+            this.grbExtensions.Size = new System.Drawing.Size(117, 227);
+            this.grbExtensions.TabIndex = 14;
+            this.grbExtensions.TabStop = false;
+            this.grbExtensions.Text = "Domain Extension";
+            // 
+            // chkCc
+            // 
+            this.chkCc.AutoSize = true;
+            this.chkCc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.chkCc.Location = new System.Drawing.Point(29, 155);
+            this.chkCc.Name = "chkCc";
+            this.chkCc.Size = new System.Drawing.Size(44, 20);
+            this.chkCc.TabIndex = 13;
+            this.chkCc.Text = ".cc";
+            this.chkCc.UseVisualStyleBackColor = true;
+            // 
+            // chkCom
+            // 
+            this.chkCom.AutoSize = true;
+            this.chkCom.Checked = true;
+            this.chkCom.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.chkCom.Location = new System.Drawing.Point(29, 51);
+            this.chkCom.Name = "chkCom";
+            this.chkCom.Size = new System.Drawing.Size(59, 20);
+            this.chkCom.TabIndex = 9;
+            this.chkCom.Text = ". com";
+            this.chkCom.UseVisualStyleBackColor = true;
+            // 
+            // chkInfo
+            // 
+            this.chkInfo.AutoSize = true;
+            this.chkInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.chkInfo.Location = new System.Drawing.Point(29, 129);
+            this.chkInfo.Name = "chkInfo";
+            this.chkInfo.Size = new System.Drawing.Size(51, 20);
+            this.chkInfo.TabIndex = 12;
+            this.chkInfo.Text = ".info";
+            this.chkInfo.UseVisualStyleBackColor = true;
+            // 
+            // chkIr
+            // 
+            this.chkIr.AutoSize = true;
+            this.chkIr.Checked = true;
+            this.chkIr.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkIr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.chkIr.Location = new System.Drawing.Point(29, 77);
+            this.chkIr.Name = "chkIr";
+            this.chkIr.Size = new System.Drawing.Size(40, 20);
+            this.chkIr.TabIndex = 10;
+            this.chkIr.Text = ". ir";
+            this.chkIr.UseVisualStyleBackColor = true;
+            // 
+            // chkNet
+            // 
+            this.chkNet.AutoSize = true;
+            this.chkNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.chkNet.Location = new System.Drawing.Point(29, 103);
+            this.chkNet.Name = "chkNet";
+            this.chkNet.Size = new System.Drawing.Size(51, 20);
+            this.chkNet.TabIndex = 11;
+            this.chkNet.Text = ". net";
+            this.chkNet.UseVisualStyleBackColor = true;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -169,7 +245,7 @@
             // 
             this.progResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progResult.Location = new System.Drawing.Point(6, 468);
+            this.progResult.Location = new System.Drawing.Point(6, 373);
             this.progResult.Name = "progResult";
             this.progResult.Size = new System.Drawing.Size(552, 23);
             this.progResult.TabIndex = 7;
@@ -183,7 +259,7 @@
             this.grbResult.Controls.Add(this.progResult);
             this.grbResult.Location = new System.Drawing.Point(350, 35);
             this.grbResult.Name = "grbResult";
-            this.grbResult.Size = new System.Drawing.Size(564, 497);
+            this.grbResult.Size = new System.Drawing.Size(564, 402);
             this.grbResult.TabIndex = 12;
             this.grbResult.TabStop = false;
             this.grbResult.Text = "WHOis Details";
@@ -214,81 +290,8 @@
             this.dgvResult.RowHeadersVisible = false;
             this.dgvResult.RowTemplate.Height = 30;
             this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvResult.Size = new System.Drawing.Size(552, 443);
+            this.dgvResult.Size = new System.Drawing.Size(552, 348);
             this.dgvResult.TabIndex = 8;
-            // 
-            // chkCom
-            // 
-            this.chkCom.AutoSize = true;
-            this.chkCom.Checked = true;
-            this.chkCom.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkCom.Location = new System.Drawing.Point(29, 51);
-            this.chkCom.Name = "chkCom";
-            this.chkCom.Size = new System.Drawing.Size(59, 20);
-            this.chkCom.TabIndex = 9;
-            this.chkCom.Text = ". com";
-            this.chkCom.UseVisualStyleBackColor = true;
-            // 
-            // chkIr
-            // 
-            this.chkIr.AutoSize = true;
-            this.chkIr.Checked = true;
-            this.chkIr.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkIr.Location = new System.Drawing.Point(29, 77);
-            this.chkIr.Name = "chkIr";
-            this.chkIr.Size = new System.Drawing.Size(40, 20);
-            this.chkIr.TabIndex = 10;
-            this.chkIr.Text = ". ir";
-            this.chkIr.UseVisualStyleBackColor = true;
-            // 
-            // chkNet
-            // 
-            this.chkNet.AutoSize = true;
-            this.chkNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkNet.Location = new System.Drawing.Point(29, 103);
-            this.chkNet.Name = "chkNet";
-            this.chkNet.Size = new System.Drawing.Size(51, 20);
-            this.chkNet.TabIndex = 11;
-            this.chkNet.Text = ". net";
-            this.chkNet.UseVisualStyleBackColor = true;
-            // 
-            // chkInfo
-            // 
-            this.chkInfo.AutoSize = true;
-            this.chkInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkInfo.Location = new System.Drawing.Point(29, 129);
-            this.chkInfo.Name = "chkInfo";
-            this.chkInfo.Size = new System.Drawing.Size(51, 20);
-            this.chkInfo.TabIndex = 12;
-            this.chkInfo.Text = ".info";
-            this.chkInfo.UseVisualStyleBackColor = true;
-            // 
-            // chkCc
-            // 
-            this.chkCc.AutoSize = true;
-            this.chkCc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkCc.Location = new System.Drawing.Point(29, 155);
-            this.chkCc.Name = "chkCc";
-            this.chkCc.Size = new System.Drawing.Size(44, 20);
-            this.chkCc.TabIndex = 13;
-            this.chkCc.Text = ".cc";
-            this.chkCc.UseVisualStyleBackColor = true;
-            // 
-            // grbExtensions
-            // 
-            this.grbExtensions.Controls.Add(this.chkCc);
-            this.grbExtensions.Controls.Add(this.chkCom);
-            this.grbExtensions.Controls.Add(this.chkInfo);
-            this.grbExtensions.Controls.Add(this.chkIr);
-            this.grbExtensions.Controls.Add(this.chkNet);
-            this.grbExtensions.Location = new System.Drawing.Point(189, 96);
-            this.grbExtensions.Name = "grbExtensions";
-            this.grbExtensions.Size = new System.Drawing.Size(117, 227);
-            this.grbExtensions.TabIndex = 14;
-            this.grbExtensions.TabStop = false;
-            this.grbExtensions.Text = "Domain Extension";
             // 
             // colDomain
             // 
@@ -300,11 +303,32 @@
             this.colDomain.ReadOnly = true;
             this.colDomain.Width = 85;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.txtLogger);
+            this.groupBox2.Location = new System.Drawing.Point(350, 443);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(564, 89);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Error Log";
+            // 
+            // txtLogger
+            // 
+            this.txtLogger.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLogger.Location = new System.Drawing.Point(3, 16);
+            this.txtLogger.Multiline = true;
+            this.txtLogger.Name = "txtLogger";
+            this.txtLogger.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtLogger.Size = new System.Drawing.Size(558, 70);
+            this.txtLogger.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(926, 544);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.grbResult);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -316,11 +340,13 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.grbExtensions.ResumeLayout(false);
+            this.grbExtensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.grbResult.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
-            this.grbExtensions.ResumeLayout(false);
-            this.grbExtensions.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -348,6 +374,8 @@
         private System.Windows.Forms.CheckBox chkCom;
         private System.Windows.Forms.GroupBox grbExtensions;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox txtLogger;
     }
 }
 

@@ -25,3 +25,12 @@ D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.Prope
 D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
 D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\bin\Debug\WHOis.exe
 D:\Programming\MyProject\C# - Windows Form\WHOis\WHOis\bin\Debug\WHOis.pdb
+D:\WHOis\src\WHOis\bin\Debug\WHOis.exe.config
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.exe
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.pdb
+D:\WHOis\src\WHOis\bin\Debug\WHOis.exe
+D:\WHOis\src\WHOis\bin\Debug\WHOis.pdb
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.csprojResolveAssemblyReference.cache
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.MainForm.resources
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.Properties.Resources.resources
+D:\WHOis\src\WHOis\obj\x86\Debug\WHOis.csproj.GenerateResource.Cache
