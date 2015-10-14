@@ -245,7 +245,7 @@
             // 
             this.progResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progResult.Location = new System.Drawing.Point(6, 373);
+            this.progResult.Location = new System.Drawing.Point(6, 341);
             this.progResult.Name = "progResult";
             this.progResult.Size = new System.Drawing.Size(552, 23);
             this.progResult.TabIndex = 7;
@@ -259,7 +259,7 @@
             this.grbResult.Controls.Add(this.progResult);
             this.grbResult.Location = new System.Drawing.Point(350, 35);
             this.grbResult.Name = "grbResult";
-            this.grbResult.Size = new System.Drawing.Size(564, 402);
+            this.grbResult.Size = new System.Drawing.Size(564, 370);
             this.grbResult.TabIndex = 12;
             this.grbResult.TabStop = false;
             this.grbResult.Text = "WHOis Details";
@@ -290,7 +290,7 @@
             this.dgvResult.RowHeadersVisible = false;
             this.dgvResult.RowTemplate.Height = 30;
             this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvResult.Size = new System.Drawing.Size(552, 348);
+            this.dgvResult.Size = new System.Drawing.Size(552, 316);
             this.dgvResult.TabIndex = 8;
             // 
             // colDomain
@@ -305,10 +305,12 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.txtLogger);
-            this.groupBox2.Location = new System.Drawing.Point(350, 443);
+            this.groupBox2.Location = new System.Drawing.Point(350, 411);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(564, 89);
+            this.groupBox2.Size = new System.Drawing.Size(564, 121);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Error Log";
@@ -320,7 +322,7 @@
             this.txtLogger.Multiline = true;
             this.txtLogger.Name = "txtLogger";
             this.txtLogger.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtLogger.Size = new System.Drawing.Size(558, 70);
+            this.txtLogger.Size = new System.Drawing.Size(558, 102);
             this.txtLogger.TabIndex = 0;
             // 
             // MainForm

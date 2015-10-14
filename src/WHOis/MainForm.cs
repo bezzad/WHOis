@@ -35,6 +35,7 @@ namespace WHOis
                 if (chk.Checked)
                     ChkDomain_CheckStateChanged(chk, e);
             }
+
         }
 
         private void ChkDomain_CheckStateChanged(object sender, EventArgs e)
@@ -83,6 +84,8 @@ namespace WHOis
 
             foreach (string name in names)
             {
+                var url = name.Replace(" ", "");
+
                 Dictionary<string, bool> extensionReserving = new Dictionary<string, bool>();
 
                 foreach (var extension in selectedExtensions)
@@ -94,14 +97,14 @@ namespace WHOis
                         server = "whois.nic.ir";
                     }
 
-                    var res = await Whoise(name, extension, server);
+                    var res = await Whoise(url, extension, server);
 
                     extensionReserving.Add(extension, res);
 
                     InvokeIfRequire(() => progResult.Value++);
                 }
 
-                Add(name, extensionReserving);
+                Add(url, extensionReserving);
             }
 
             UiActivation(true);
@@ -192,7 +195,7 @@ namespace WHOis
 
         private void Log(string msg)
         {
-            InvokeIfRequire(() => txtLogger.Text += string.Format("{0} {1} {0}", Environment.NewLine, msg));
+            InvokeIfRequire(() => txtLogger.Text += string.Format("{0}{1} {0}", Environment.NewLine, msg));
         }
 
         public void InvokeIfRequire(Action act)
