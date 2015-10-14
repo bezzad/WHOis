@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace WHOis
@@ -9,7 +12,7 @@ namespace WHOis
     {
         private CancellationTokenSource _cts;
         readonly List<string> _selectedExtensions;
-
+        public int PrintColumnWidth = 30;
 
         public MainForm()
         {
@@ -44,7 +47,8 @@ namespace WHOis
                     Name = ext,
                     HeaderText = "." + ext,
                     ReadOnly = true,
-                    ThreeState = true
+                    ThreeState = true,
+                    SortMode = DataGridViewColumnSortMode.Automatic
                 };
 
                 dgvResult.Columns.Add(col);
@@ -150,5 +154,74 @@ namespace WHOis
             }
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            var dlgSave = new SaveFileDialog
+            {
+                FileName = "WhoisResult.txt",
+                CheckPathExists = true,
+                DefaultExt = "Text Files *.Text|",
+                Title = "Save WHOis Result Browser"
+            };
+            if (dlgSave.ShowDialog(this) == DialogResult.OK)
+            {
+                string[] result = GetDisplayResult();
+                File.WriteAllLines(dlgSave.FileName, result);
+                Process.Start(dlgSave.FileName);
+            }
+        }
+
+        private string[] GetDisplayResult()
+        {
+            var rows = new List<string>();
+            var buffer = "";
+            var line = "";
+
+            foreach (DataGridViewColumn col in dgvResult.Columns)
+            {
+                buffer += AddFlowChar($"|  {col.HeaderText} ", PrintColumnWidth, ' ') + "\t";
+            }
+            rows.Add(buffer); // add header
+
+            // create header line acourding header char lenght like: =============
+            line = AddFlowChar("|", (dgvResult.Columns.Count - 1) * PrintColumnWidth, '=');
+            rows.Add(line); // add header line
+
+            line = line.Replace("=", "--"); // other lines like: ---------------------
+
+            foreach (DataGridViewRow row in dgvResult.Rows)
+            {
+                buffer = "";
+
+                foreach (DataGridViewColumn col in dgvResult.Columns)
+                {
+                    var val = row.Cells[col.Name].Value.ToString();
+
+                    if (val == CheckState.Indeterminate.ToString())
+                        val = "Reserved";
+                    else if (val == CheckState.Checked.ToString())
+                        val = "Free";
+                    else if (val == CheckState.Unchecked.ToString())
+                        val = "Error";
+
+                    buffer += AddFlowChar($"|  {val}", PrintColumnWidth, ' ') + "\t"; ;
+                }
+
+                rows.Add(buffer);
+                rows.Add(line);
+            }
+
+            return rows.ToArray();
+        }
+
+        private string AddFlowChar(string item, int fitLength, char flow)
+        {
+            for (fitLength = fitLength - item.Length; fitLength > 0; fitLength--)
+            {
+                item += flow.ToString();
+            }
+
+            return item;
+        }
     }
 }

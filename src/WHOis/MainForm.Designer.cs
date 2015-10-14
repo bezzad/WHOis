@@ -37,6 +37,7 @@
             this.txtHostName = new System.Windows.Forms.TextBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.grbExtensions = new System.Windows.Forms.GroupBox();
             this.chkCc = new System.Windows.Forms.CheckBox();
@@ -95,6 +96,8 @@
             // 
             // txtHostName
             // 
+            this.txtHostName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.txtHostName.Location = new System.Drawing.Point(12, 89);
             this.txtHostName.Margin = new System.Windows.Forms.Padding(4);
             this.txtHostName.Multiline = true;
@@ -104,6 +107,7 @@
             // 
             // btnLookUp
             // 
+            this.btnLookUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnLookUp.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLookUp.Location = new System.Drawing.Point(251, 473);
             this.btnLookUp.Margin = new System.Windows.Forms.Padding(4);
@@ -116,6 +120,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.btnCancel);
             this.groupBox1.Controls.Add(this.grbExtensions);
             this.groupBox1.Controls.Add(this.label6);
@@ -133,8 +140,21 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
             // 
+            // btnSave
+            // 
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.Location = new System.Drawing.Point(251, 382);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(156, 33);
+            this.btnSave.TabIndex = 16;
+            this.btnSave.Text = "Save WHOis Result";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancel.Enabled = false;
             this.btnCancel.Location = new System.Drawing.Point(12, 473);
@@ -153,7 +173,7 @@
             this.grbExtensions.Controls.Add(this.chkInfo);
             this.grbExtensions.Controls.Add(this.chkIr);
             this.grbExtensions.Controls.Add(this.chkNet);
-            this.grbExtensions.Location = new System.Drawing.Point(252, 118);
+            this.grbExtensions.Location = new System.Drawing.Point(251, 89);
             this.grbExtensions.Margin = new System.Windows.Forms.Padding(4);
             this.grbExtensions.Name = "grbExtensions";
             this.grbExtensions.Padding = new System.Windows.Forms.Padding(4);
@@ -228,6 +248,7 @@
             // 
             // label6
             // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.Red;
             this.label6.Location = new System.Drawing.Point(8, 431);
@@ -387,6 +408,7 @@
         private System.Windows.Forms.GroupBox grbExtensions;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 
