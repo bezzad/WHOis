@@ -2,7 +2,7 @@
 ----------------------
 [![Build status](https://ci.appveyor.com/api/projects/status/t1k1cklv1q6ndymg?svg=true)](https://ci.appveyor.com/project/Behzadkhosravifar/whois)
 
-Whois **several domains* to know are reserved or not!
+Whois **several domains** to know are reserved or not!
 
 ![Capture](https://raw.githubusercontent.com/Behzadkhosravifar/WHOis/master/img/screenshut.png)
 
