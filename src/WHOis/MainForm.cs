@@ -68,9 +68,10 @@ namespace WHOis
             try
             {
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
-                UiActivation(false);
                 _cts = new CancellationTokenSource();
-                string[] names = txtHostName.Text.Replace(" ", "\r\n").Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                btnPreCompile.PerformClick();
+                string[] names = GetNamesByPreCompile(txtHostName.Text);
+                UiActivation(false);
 
 
                 if (names.Length == 0 || _selectedExtensions.Count == 0) return;
@@ -140,7 +141,9 @@ namespace WHOis
             InvokeIfRequire(() => cmbServer.Enabled = active);
             InvokeIfRequire(() => grbExtensions.Enabled = active);
             InvokeIfRequire(() => btnLookUp.Enabled = active);
+            InvokeIfRequire(() => btnPreCompile.Enabled = active);
             InvokeIfRequire(() => btnCancel.Enabled = !active);
+            InvokeIfRequire(() => txtHostName.ReadOnly = !active);
         }
         public void InvokeIfRequire(Action act)
         {
@@ -169,6 +172,58 @@ namespace WHOis
                 File.WriteAllLines(dlgSave.FileName, result);
                 Process.Start(dlgSave.FileName);
             }
+        }
+
+        private string[] GetNamesByPreCompile(string text)
+        {
+            var names = text.Split(new[]
+            {
+                "\r\n",
+                ",",
+                ":",
+                "'",
+                "\"",
+                ";",
+                ".",
+                "&",
+                "~",
+                "!",
+                "@",
+                "#",
+                "$",
+                "%",
+                "^",
+                "*",
+                "(",
+                ")",
+                "-",
+                "+",
+                "_",
+                "+",
+                "=",
+                @"\",
+                "|",
+                "{",
+                "}",
+                "`",
+                "?",
+                "/",
+                "<",
+                ">",
+                "[",
+                "]",
+                " "
+            }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> preCompiledNames = new List<string>();
+            foreach (var name in names)
+            {
+                if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) continue;
+
+                preCompiledNames.Add(name);
+            }
+
+            return preCompiledNames.ToArray();
         }
 
         private string[] GetDisplayResult()
@@ -222,6 +277,41 @@ namespace WHOis
             }
 
             return item;
+        }
+
+        private void btnPreCompile_Click(object sender, EventArgs e)
+        {
+            var names = GetNamesByPreCompile(txtHostName.Text);
+            txtHostName.Text = string.Join("\r\n", names);
+        }
+
+        private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
+                DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+                if (!string.IsNullOrEmpty(cell.ErrorText))
+                {
+                    string server = cmbServer.Text;
+
+                    if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
+                    {
+                        server = "whois.nic.ir";
+                    }
+
+                    var res = await WhoisHelper.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
+                        cell.OwningColumn.HeaderText.Substring(1), server, false);
+
+                    cell.ErrorText = res.ErrorLogArgs?.Message ?? "";
+                    cell.Value = res.ReserveState;
+                }
+            }
+            finally
+            {
+                InvokeIfRequire(() => Cursor = Cursors.Default);
+            }
         }
     }
 }
