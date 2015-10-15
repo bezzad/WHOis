@@ -3,8 +3,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
+using System.Reflection;
 
 namespace WHOis
 {
@@ -19,6 +19,8 @@ namespace WHOis
             InitializeComponent();
 
             _selectedExtensions = new List<string>();
+
+            this.Text = $"WHOis  Onlin Domain Database   ver {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
         }
 
 
@@ -81,12 +83,14 @@ namespace WHOis
 
                 foreach (var url in names)
                 {
-                    if (_cts.IsCancellationRequested) break;
+                    if (_cts.IsCancellationRequested) return;
 
                     var extensionReserving = new Dictionary<string, WhoisInfo>();
 
                     foreach (var extension in _selectedExtensions)
                     {
+                        if (_cts.IsCancellationRequested) return;
+
                         string server = cmbServer.Text;
 
                         if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
@@ -293,7 +297,7 @@ namespace WHOis
 
                 InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
                 DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                
+
 
                 if (!string.IsNullOrEmpty(cell.ErrorText))
                 {
