@@ -37,6 +37,7 @@
             this.txtHostName = new System.Windows.Forms.TextBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnPreCompile = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.grbExtensions = new System.Windows.Forms.GroupBox();
@@ -53,7 +54,7 @@
             this.grbResult = new System.Windows.Forms.GroupBox();
             this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnPreCompile = new System.Windows.Forms.Button();
+            this.lblProcessPercent = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -135,6 +136,17 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
+            // 
+            // btnPreCompile
+            // 
+            this.btnPreCompile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPreCompile.Location = new System.Drawing.Point(188, 295);
+            this.btnPreCompile.Name = "btnPreCompile";
+            this.btnPreCompile.Size = new System.Drawing.Size(117, 27);
+            this.btnPreCompile.TabIndex = 17;
+            this.btnPreCompile.Text = "Parse Host Names";
+            this.btnPreCompile.UseVisualStyleBackColor = true;
+            this.btnPreCompile.Click += new System.EventHandler(this.btnPreCompile_Click);
             // 
             // btnSave
             // 
@@ -281,7 +293,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progResult.Location = new System.Drawing.Point(6, 468);
             this.progResult.Name = "progResult";
-            this.progResult.Size = new System.Drawing.Size(552, 23);
+            this.progResult.Size = new System.Drawing.Size(434, 23);
             this.progResult.TabIndex = 7;
             // 
             // grbResult
@@ -289,6 +301,7 @@
             this.grbResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbResult.Controls.Add(this.lblProcessPercent);
             this.grbResult.Controls.Add(this.dgvResult);
             this.grbResult.Controls.Add(this.progResult);
             this.grbResult.Location = new System.Drawing.Point(350, 35);
@@ -323,7 +336,7 @@
             this.dgvResult.ReadOnly = true;
             this.dgvResult.RowHeadersVisible = false;
             this.dgvResult.RowTemplate.Height = 30;
-            this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvResult.Size = new System.Drawing.Size(552, 443);
             this.dgvResult.TabIndex = 8;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
@@ -338,16 +351,15 @@
             this.colDomain.ReadOnly = true;
             this.colDomain.Width = 85;
             // 
-            // btnPreCompile
+            // lblProcessPercent
             // 
-            this.btnPreCompile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPreCompile.Location = new System.Drawing.Point(188, 295);
-            this.btnPreCompile.Name = "btnPreCompile";
-            this.btnPreCompile.Size = new System.Drawing.Size(117, 27);
-            this.btnPreCompile.TabIndex = 17;
-            this.btnPreCompile.Text = "Parse Host Names";
-            this.btnPreCompile.UseVisualStyleBackColor = true;
-            this.btnPreCompile.Click += new System.EventHandler(this.btnPreCompile_Click);
+            this.lblProcessPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProcessPercent.Location = new System.Drawing.Point(446, 468);
+            this.lblProcessPercent.Name = "lblProcessPercent";
+            this.lblProcessPercent.Size = new System.Drawing.Size(112, 23);
+            this.lblProcessPercent.TabIndex = 9;
+            this.lblProcessPercent.Text = "0 / 0";
+            this.lblProcessPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainForm
             // 
@@ -400,6 +412,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnPreCompile;
+        private System.Windows.Forms.Label lblProcessPercent;
     }
 }
 

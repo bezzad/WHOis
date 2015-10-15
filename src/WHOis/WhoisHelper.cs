@@ -29,7 +29,7 @@ namespace WHOis
         /// <param name="server">server url</param>
         /// <param name="fullResponse">Set Whois info completely</param>
         /// <returns>False if reserved and True if free</returns>
-        public static async Task<WhoisInfo> WhoiseCheckState(string name, string postfix, string server, bool fullResponse)
+        public static async Task<WhoisInfo> WhoiseCheckState(string name, string postfix, string server, bool fullResponse, System.Threading.CancellationToken ct)
         {
             return await Task.Run(() =>
             {
@@ -105,7 +105,7 @@ namespace WHOis
                 if (string.IsNullOrEmpty(result.Info))
                 {
                     result.ReserveState = CheckState.Unchecked;
-                    result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, true, "No Response: Unkowen exception caused to couldn't response from server!");
+                    result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, true, "No Response: Unknown exception caused to couldn't response from server!");
                     OnWhoisLog(result.ErrorLogArgs);
                 }
                 else
@@ -117,7 +117,7 @@ namespace WHOis
                 }
 
                 return result;
-            });
+            }, ct);
         }
     }
 }

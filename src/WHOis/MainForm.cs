@@ -11,6 +11,8 @@ namespace WHOis
     public partial class MainForm : Form
     {
         private CancellationTokenSource _cts;
+        private CancellationTokenSource _ctsOnDoubleClick;
+
         readonly List<string> _selectedExtensions;
         public int PrintColumnWidth = 30;
 
@@ -80,12 +82,14 @@ namespace WHOis
 
                 InvokeIfRequire(() => progResult.Maximum = names.Length * _selectedExtensions.Count);
                 InvokeIfRequire(() => progResult.Value = 0);
+                InvokeIfRequire(() => lblProcessPercent.Text = $"0 / {names.Length * _selectedExtensions.Count} domain");
 
                 foreach (var url in names)
                 {
                     if (_cts.IsCancellationRequested) return;
 
-                    var extensionReserving = new Dictionary<string, WhoisInfo>();
+                    int rowIndex = dgvResult.Rows.Add();
+                    dgvResult.Rows[rowIndex].Cells["colDomain"].Value = url;
 
                     foreach (var extension in _selectedExtensions)
                     {
@@ -98,14 +102,13 @@ namespace WHOis
                             server = "whois.nic.ir";
                         }
 
-                        var res = await WhoisHelper.WhoiseCheckState(url, extension, server, false);
+                        var res = await WhoisHelper.WhoiseCheckState(url, extension, server, false, _cts.Token);
 
-                        extensionReserving.Add(extension, res);
+                        SetCellStyle(dgvResult.Rows[rowIndex].Cells[extension], res);
 
                         InvokeIfRequire(() => progResult.Value++);
+                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {names.Length * _selectedExtensions.Count} domain");
                     }
-
-                    Add(url, extensionReserving);
                 }
             }
             finally
@@ -116,28 +119,82 @@ namespace WHOis
         private void btnCancel_Click(object sender, EventArgs e)
         {
             _cts.Cancel();
+            _ctsOnDoubleClick.Cancel();
+        }
+        private void btnPreCompile_Click(object sender, EventArgs e)
+        {
+            var names = GetNamesByPreCompile(txtHostName.Text);
+            txtHostName.Text = string.Join("\r\n", names);
+        }
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            var dlgSave = new SaveFileDialog
+            {
+                FileName = "WhoisResult.txt",
+                CheckPathExists = true,
+                DefaultExt = "Text Files *.Text|",
+                Title = "Save WHOis Result Browser"
+            };
+            if (dlgSave.ShowDialog(this) == DialogResult.OK)
+            {
+                string[] result = GetDisplayResult();
+                File.WriteAllLines(dlgSave.FileName, result);
+                Process.Start(dlgSave.FileName);
+            }
+        }
+        private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex < 0) return;
+
+                if (_ctsOnDoubleClick == null || _ctsOnDoubleClick.IsCancellationRequested)
+                    _ctsOnDoubleClick = new CancellationTokenSource();
+
+                InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
+                DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+
+                if (!string.IsNullOrEmpty(cell.ErrorText))
+                {
+                    string server = cmbServer.Text;
+
+                    if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
+                    {
+                        server = "whois.nic.ir";
+                    }
+
+                    var res = await WhoisHelper.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
+                        cell.OwningColumn.HeaderText.Substring(1), server, false, _ctsOnDoubleClick.Token);
+
+                    SetCellStyle(cell, res);
+                }
+            }
+            finally
+            {
+                InvokeIfRequire(() => Cursor = Cursors.Default);
+            }
         }
 
-
-        private void Add(string domain, Dictionary<string, WhoisInfo> extensions)
+        private void SetCellStyle(DataGridViewCell cell, WhoisInfo data)
         {
-            var row = dgvResult.Rows.Add();
-            dgvResult.Rows[row].Cells["colDomain"].Value = domain;
+            InvokeIfRequire(() => cell.Value = data.ReserveState);
 
-            foreach (var e in extensions.Keys)
+            if (data.ReserveState == CheckState.Unchecked)
             {
-                var cell = ((DataGridViewCheckBoxCell)dgvResult.Rows[row].Cells[e]);
-                cell.Value = extensions[e].ReserveState;
-
-                if (extensions[e].ReserveState == CheckState.Unchecked)
-                {
-                    cell.Style.BackColor = System.Drawing.Color.Coral;
-                    cell.ErrorText = extensions[e].ErrorLogArgs.Message;
-                }
-                else if (extensions[e].ReserveState == CheckState.Checked)
-                    cell.Style.BackColor = System.Drawing.Color.LightGreen;
-                else if (extensions[e].ReserveState == CheckState.Indeterminate)
-                    cell.Style.BackColor = System.Drawing.Color.LightPink;
+                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.Coral);
+                InvokeIfRequire(() => cell.ErrorText = data?.ErrorLogArgs.Message ?? " ");
+                InvokeIfRequire(() => cell.ErrorText += "\r\n Double Click to rewhois");
+            }
+            else if (data.ReserveState == CheckState.Checked)
+            {
+                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.LightGreen);
+                InvokeIfRequire(() => cell.ErrorText = null);
+            }
+            else if (data.ReserveState == CheckState.Indeterminate)
+            {
+                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.LightPink);
+                InvokeIfRequire(() => cell.ErrorText = null);
             }
         }
         private void UiActivation(bool active)
@@ -160,24 +217,6 @@ namespace WHOis
                 act();
             }
         }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            var dlgSave = new SaveFileDialog
-            {
-                FileName = "WhoisResult.txt",
-                CheckPathExists = true,
-                DefaultExt = "Text Files *.Text|",
-                Title = "Save WHOis Result Browser"
-            };
-            if (dlgSave.ShowDialog(this) == DialogResult.OK)
-            {
-                string[] result = GetDisplayResult();
-                File.WriteAllLines(dlgSave.FileName, result);
-                Process.Start(dlgSave.FileName);
-            }
-        }
-
         private string[] GetNamesByPreCompile(string text)
         {
             var names = text.Split(new[]
@@ -229,7 +268,6 @@ namespace WHOis
 
             return preCompiledNames.ToArray();
         }
-
         private string[] GetDisplayResult()
         {
             var rows = new List<string>();
@@ -272,7 +310,6 @@ namespace WHOis
 
             return rows.ToArray();
         }
-
         private string AddFlowChar(string item, int fitLength, char flow)
         {
             for (fitLength = fitLength - item.Length; fitLength > 0; fitLength--)
@@ -283,42 +320,5 @@ namespace WHOis
             return item;
         }
 
-        private void btnPreCompile_Click(object sender, EventArgs e)
-        {
-            var names = GetNamesByPreCompile(txtHostName.Text);
-            txtHostName.Text = string.Join("\r\n", names);
-        }
-
-        private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                if (e.RowIndex < 0) return;
-
-                InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
-                DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-
-                if (!string.IsNullOrEmpty(cell.ErrorText))
-                {
-                    string server = cmbServer.Text;
-
-                    if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
-                    {
-                        server = "whois.nic.ir";
-                    }
-
-                    var res = await WhoisHelper.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
-                        cell.OwningColumn.HeaderText.Substring(1), server, false);
-
-                    cell.ErrorText = res.ErrorLogArgs?.Message ?? "";
-                    cell.Value = res.ReserveState;
-                }
-            }
-            finally
-            {
-                InvokeIfRequire(() => Cursor = Cursors.Default);
-            }
-        }
     }
 }
