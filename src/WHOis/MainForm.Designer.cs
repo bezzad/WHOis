@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -53,8 +54,8 @@
             this.progResult = new System.Windows.Forms.ProgressBar();
             this.grbResult = new System.Windows.Forms.GroupBox();
             this.dgvResult = new System.Windows.Forms.DataGridView();
-            this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblProcessPercent = new System.Windows.Forms.Label();
+            this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -335,21 +336,13 @@
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.ReadOnly = true;
             this.dgvResult.RowHeadersVisible = false;
+            this.dgvResult.RowHeadersWidth = 40;
+            this.dgvResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvResult.RowTemplate.Height = 30;
             this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvResult.Size = new System.Drawing.Size(552, 443);
             this.dgvResult.TabIndex = 8;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
-            // 
-            // colDomain
-            // 
-            this.colDomain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colDomain.FillWeight = 200F;
-            this.colDomain.Frozen = true;
-            this.colDomain.HeaderText = "Domain";
-            this.colDomain.Name = "colDomain";
-            this.colDomain.ReadOnly = true;
-            this.colDomain.Width = 85;
             // 
             // lblProcessPercent
             // 
@@ -360,6 +353,18 @@
             this.lblProcessPercent.TabIndex = 9;
             this.lblProcessPercent.Text = "0 / 0";
             this.lblProcessPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // colDomain
+            // 
+            this.colDomain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calisto MT", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colDomain.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colDomain.FillWeight = 200F;
+            this.colDomain.Frozen = true;
+            this.colDomain.HeaderText = "Domain";
+            this.colDomain.Name = "colDomain";
+            this.colDomain.ReadOnly = true;
+            this.colDomain.Width = 85;
             // 
             // MainForm
             // 
@@ -408,11 +413,11 @@
         private System.Windows.Forms.CheckBox chkIr;
         private System.Windows.Forms.CheckBox chkCom;
         private System.Windows.Forms.GroupBox grbExtensions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnPreCompile;
         private System.Windows.Forms.Label lblProcessPercent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
     }
 }
 

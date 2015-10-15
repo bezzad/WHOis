@@ -6,16 +6,16 @@ using System.Windows.Forms;
 
 namespace WHOis
 {
-    public static class WhoisHelper
+    public class WhoisHelper
     {
-        static TcpClient _tcpWhois;
-        static NetworkStream _nsWhois;
-        static BufferedStream _bfWhois;
-        static StreamWriter _strmSend;
-        static StreamReader _strmRecive;
+        TcpClient _tcpWhois;
+        NetworkStream _nsWhois;
+        BufferedStream _bfWhois;
+        StreamWriter _strmSend;
+        StreamReader _strmRecive;
 
-        public static event EventHandler<WhoisEventArgs> WhoisLog;
-        private static void OnWhoisLog(WhoisEventArgs e)
+        public event EventHandler<WhoisEventArgs> WhoisLog;
+        private void OnWhoisLog(WhoisEventArgs e)
         {
             WhoisLog?.Invoke(null, e);
         }
@@ -28,12 +28,14 @@ namespace WHOis
         /// <param name="postfix">domain extension</param>
         /// <param name="server">server url</param>
         /// <param name="fullResponse">Set Whois info completely</param>
+        /// <param name="ct">Cancellation Token</param>
         /// <returns>False if reserved and True if free</returns>
-        public static async Task<WhoisInfo> WhoiseCheckState(string name, string postfix, string server, bool fullResponse, System.Threading.CancellationToken ct)
+        public async Task<WhoisInfo> WhoiseCheckState(string name, string postfix, string server, bool fullResponse, System.Threading.CancellationToken ct)
         {
             return await Task.Run(() =>
             {
-                var result = new WhoisInfo();
+                var result = new WhoisInfo();                
+
                 try
                 {
                     //CONNECT TO TCP CLIENT OF WHOIS
@@ -48,8 +50,8 @@ namespace WHOis
                     _strmSend = new StreamWriter(_bfWhois);
 
                     _strmSend.WriteLine(name + "." + postfix);
-
                     _strmSend.Flush();
+
 
                     try
                     {

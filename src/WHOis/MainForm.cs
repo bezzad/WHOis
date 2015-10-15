@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace WHOis
 {
@@ -26,6 +27,99 @@ namespace WHOis
         }
 
 
+        private async void btnLookUp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                InvokeIfRequire(() => dgvResult.Rows.Clear());
+                _cts = new CancellationTokenSource();
+                btnPreCompile.PerformClick();
+                string[] names = GetNamesByPreCompile(txtHostName.Text);
+                UiActivation(false);
+
+
+                if (names.Length == 0 || _selectedExtensions.Count == 0) return;
+
+                InvokeIfRequire(() => progResult.Maximum = names.Length * _selectedExtensions.Count);
+                InvokeIfRequire(() => progResult.Value = 0);
+                InvokeIfRequire(() => lblProcessPercent.Text = $"0 / {names.Length * _selectedExtensions.Count} domain");
+
+                foreach (var url in names)
+                {
+                    if (_cts.IsCancellationRequested) return;
+
+                    int rowIndex = dgvResult.Rows.Add();
+                    InvokeIfRequire(() => dgvResult.Rows[rowIndex].Cells["colDomain"].Value = url);
+                }
+
+                await WhoisParallel();
+            }
+            finally
+            {
+                UiActivation(true);
+            }
+        }
+
+        private async Task WhoisParallel()
+        {
+            string server = cmbServer.Text;
+            List<Task> tasks = new List<Task>();
+
+            foreach (var extension in _selectedExtensions)
+            {
+                if (_cts.IsCancellationRequested) return;
+
+                tasks.Add(Task.Run(async () =>
+                {
+                    var whoisHost = server;
+
+                    if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
+                    {
+                        whoisHost = "whois.nic.ir";
+                    }
+
+                    foreach (DataGridViewRow row in dgvResult.Rows)
+                    {
+                        if (_cts.IsCancellationRequested) return;
+
+                        var whois = new WhoisHelper();
+                        var res = await whois.WhoiseCheckState(row.Cells[0].Value.ToString(), extension, whoisHost, false, _cts.Token);
+                        SetCellStyle(row.Cells[extension], res);
+                        InvokeIfRequire(() => progResult.Value++);
+                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {dgvResult.Rows.Count * _selectedExtensions.Count} domain");
+                    }
+                }));
+            }
+
+            await Task.Run(() => Task.WaitAll(tasks.ToArray()));
+        }
+
+        private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            if (_ctsOnDoubleClick == null || _ctsOnDoubleClick.IsCancellationRequested)
+                _ctsOnDoubleClick = new CancellationTokenSource();
+
+            DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            cell.Style.BackColor = System.Drawing.Color.OrangeRed;
+
+            if (!string.IsNullOrEmpty(cell.ErrorText))
+            {
+                string server = cmbServer.Text;
+
+                if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
+                {
+                    server = "whois.nic.ir";
+                }
+
+                var whois = new WhoisHelper();
+                var res = await whois.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
+                    cell.OwningColumn.HeaderText.Substring(1), server, false, _ctsOnDoubleClick.Token);
+
+                SetCellStyle(cell, res);
+            }
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
             cmbServer.SelectedIndex = 0;
@@ -67,55 +161,6 @@ namespace WHOis
                     dgvResult.Columns.Remove(ext);
             }
         }
-        private async void btnLookUp_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                InvokeIfRequire(() => dgvResult.Rows.Clear());
-                _cts = new CancellationTokenSource();
-                btnPreCompile.PerformClick();
-                string[] names = GetNamesByPreCompile(txtHostName.Text);
-                UiActivation(false);
-
-
-                if (names.Length == 0 || _selectedExtensions.Count == 0) return;
-
-                InvokeIfRequire(() => progResult.Maximum = names.Length * _selectedExtensions.Count);
-                InvokeIfRequire(() => progResult.Value = 0);
-                InvokeIfRequire(() => lblProcessPercent.Text = $"0 / {names.Length * _selectedExtensions.Count} domain");
-
-                foreach (var url in names)
-                {
-                    if (_cts.IsCancellationRequested) return;
-
-                    int rowIndex = dgvResult.Rows.Add();
-                    dgvResult.Rows[rowIndex].Cells["colDomain"].Value = url;
-
-                    foreach (var extension in _selectedExtensions)
-                    {
-                        if (_cts.IsCancellationRequested) return;
-
-                        string server = cmbServer.Text;
-
-                        if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
-                        {
-                            server = "whois.nic.ir";
-                        }
-
-                        var res = await WhoisHelper.WhoiseCheckState(url, extension, server, false, _cts.Token);
-
-                        SetCellStyle(dgvResult.Rows[rowIndex].Cells[extension], res);
-
-                        InvokeIfRequire(() => progResult.Value++);
-                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {names.Length * _selectedExtensions.Count} domain");
-                    }
-                }
-            }
-            finally
-            {
-                UiActivation(true);
-            }
-        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             _cts.Cancel();
@@ -140,39 +185,6 @@ namespace WHOis
                 string[] result = GetDisplayResult();
                 File.WriteAllLines(dlgSave.FileName, result);
                 Process.Start(dlgSave.FileName);
-            }
-        }
-        private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                if (e.RowIndex < 0) return;
-
-                if (_ctsOnDoubleClick == null || _ctsOnDoubleClick.IsCancellationRequested)
-                    _ctsOnDoubleClick = new CancellationTokenSource();
-
-                InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
-                DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-
-                if (!string.IsNullOrEmpty(cell.ErrorText))
-                {
-                    string server = cmbServer.Text;
-
-                    if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
-                    {
-                        server = "whois.nic.ir";
-                    }
-
-                    var res = await WhoisHelper.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
-                        cell.OwningColumn.HeaderText.Substring(1), server, false, _ctsOnDoubleClick.Token);
-
-                    SetCellStyle(cell, res);
-                }
-            }
-            finally
-            {
-                InvokeIfRequire(() => Cursor = Cursors.Default);
             }
         }
 
