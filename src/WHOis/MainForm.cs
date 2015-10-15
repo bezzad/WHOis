@@ -289,8 +289,11 @@ namespace WHOis
         {
             try
             {
+                if (e.RowIndex < 0) return;
+
                 InvokeIfRequire(() => Cursor = Cursors.WaitCursor);
                 DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                
 
                 if (!string.IsNullOrEmpty(cell.ErrorText))
                 {
