@@ -44,13 +44,15 @@ namespace WHOis
                 InvokeIfRequire(() => progResult.Value = 0);
                 InvokeIfRequire(() => lblProcessPercent.Text = $"0 / {names.Length * _selectedExtensions.Count} domain");
 
-                foreach (var url in names)
+                await Task.Run(() =>
                 {
-                    if (_cts.IsCancellationRequested) return;
+                    foreach (var url in names)
+                    {
+                        if (_cts.IsCancellationRequested) return;
 
-                    int rowIndex = dgvResult.Rows.Add();
-                    InvokeIfRequire(() => dgvResult.Rows[rowIndex].Cells["colDomain"].Value = url);
-                }
+                        InvokeIfRequire(() => dgvResult.Rows.Add(url));
+                    }
+                });
 
                 await WhoisParallel();
             }
