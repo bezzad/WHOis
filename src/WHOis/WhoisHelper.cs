@@ -92,7 +92,7 @@ namespace WHOis
                 {
                     try
                     {
-                        _tcpWhois.Close();
+                        _tcpWhois?.Close();
                     }
                     catch (Exception exp)
                     {

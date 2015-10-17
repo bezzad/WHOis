@@ -163,8 +163,8 @@ namespace WHOis
         }
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            _cts.Cancel();
-            _ctsOnDoubleClick.Cancel();
+            _cts?.Cancel();
+            _ctsOnDoubleClick?.Cancel();
         }
         private void btnPreCompile_Click(object sender, EventArgs e)
         {

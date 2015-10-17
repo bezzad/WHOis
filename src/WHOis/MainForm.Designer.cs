@@ -53,8 +53,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.progResult = new System.Windows.Forms.ProgressBar();
             this.grbResult = new System.Windows.Forms.GroupBox();
-            this.dgvResult = new System.Windows.Forms.DataGridView();
             this.lblProcessPercent = new System.Windows.Forms.Label();
+            this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
@@ -312,6 +312,16 @@
             this.grbResult.TabStop = false;
             this.grbResult.Text = "WHOis Details";
             // 
+            // lblProcessPercent
+            // 
+            this.lblProcessPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProcessPercent.Location = new System.Drawing.Point(446, 468);
+            this.lblProcessPercent.Name = "lblProcessPercent";
+            this.lblProcessPercent.Size = new System.Drawing.Size(112, 23);
+            this.lblProcessPercent.TabIndex = 9;
+            this.lblProcessPercent.Text = "0 / 0";
+            this.lblProcessPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dgvResult
             // 
             this.dgvResult.AllowUserToAddRows = false;
@@ -339,20 +349,11 @@
             this.dgvResult.RowHeadersWidth = 40;
             this.dgvResult.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvResult.RowTemplate.Height = 30;
+            this.dgvResult.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvResult.Size = new System.Drawing.Size(552, 443);
             this.dgvResult.TabIndex = 8;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
-            // 
-            // lblProcessPercent
-            // 
-            this.lblProcessPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblProcessPercent.Location = new System.Drawing.Point(446, 468);
-            this.lblProcessPercent.Name = "lblProcessPercent";
-            this.lblProcessPercent.Size = new System.Drawing.Size(112, 23);
-            this.lblProcessPercent.TabIndex = 9;
-            this.lblProcessPercent.Text = "0 / 0";
-            this.lblProcessPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // colDomain
             // 
