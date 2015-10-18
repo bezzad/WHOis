@@ -13,10 +13,8 @@ namespace WHOis
     {
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
-
-        
         readonly List<string> _selectedExtensions;
-        public int PrintColumnWidth = 30;
+
 
         public MainForm()
         {
@@ -25,7 +23,7 @@ namespace WHOis
             _selectedExtensions = new List<string>();
 
             this.Text = $"WHOis  Online Domain Database   version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
-            
+
         }
 
 
@@ -64,41 +62,19 @@ namespace WHOis
                 UiActivation(true);
             }
         }
-
-        private async Task WhoisParallel()
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            string server = cmbServer.Text;
-            List<Task> tasks = new List<Task>();
+            cmbServer.SelectedIndex = 0;
 
-            foreach (var extension in _selectedExtensions)
+            foreach (CheckBox chk in grbExtensions.Controls)
             {
-                if (_cts.IsCancellationRequested) return;
+                chk.CheckStateChanged += ChkDomain_CheckStateChanged;
 
-                tasks.Add(Task.Run(async () =>
-                {
-                    var whoisHost = server;
-
-                    if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
-                    {
-                        whoisHost = "whois.nic.ir";
-                    }
-
-                    foreach (DataGridViewRow row in dgvResult.Rows)
-                    {
-                        if (_cts.IsCancellationRequested) return;
-
-                        var whois = new WhoisHelper();
-                        var res = await whois.WhoiseCheckState(row.Cells[0].Value.ToString(), extension, whoisHost, false, _cts.Token);
-                        SetCellStyle(row.Cells[extension], res);
-                        InvokeIfRequire(() => progResult.Value++);
-                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {dgvResult.Rows.Count * _selectedExtensions.Count} domain");
-                    }
-                }));
+                if (chk.Checked)
+                    ChkDomain_CheckStateChanged(chk, e);
             }
 
-            await Task.Run(() => Task.WaitAll(tasks.ToArray()));
         }
-
         private async void dgvResult_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -124,19 +100,6 @@ namespace WHOis
 
                 SetCellStyle(cell, res);
             }
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            cmbServer.SelectedIndex = 0;
-
-            foreach (CheckBox chk in grbExtensions.Controls)
-            {
-                chk.CheckStateChanged += ChkDomain_CheckStateChanged;
-
-                if (chk.Checked)
-                    ChkDomain_CheckStateChanged(chk, e);
-            }
-
         }
         private void ChkDomain_CheckStateChanged(object sender, EventArgs e)
         {
@@ -181,17 +144,53 @@ namespace WHOis
         {
             var dlgSave = new SaveFileDialog
             {
-                FileName = "WhoisResult.txt",
+                FileName = "WhoisResult.csv",
                 CheckPathExists = true,
-                DefaultExt = "Text Files *.Text|",
+                DefaultExt = "CSV Files *.csv|",
                 Title = "Save WHOis Result Browser"
             };
             if (dlgSave.ShowDialog(this) == DialogResult.OK)
             {
-                string[] result = GetDisplayResult();
+                string[] result = dgvResult.PrintGridViewToCsv();
                 File.WriteAllLines(dlgSave.FileName, result);
                 Process.Start(dlgSave.FileName);
             }
+        }
+
+
+
+        private async Task WhoisParallel()
+        {
+            var server = cmbServer.Text;
+            var tasks = new List<Task>();
+
+            foreach (var extension in _selectedExtensions)
+            {
+                if (_cts.IsCancellationRequested) return;
+
+                tasks.Add(Task.Run(async () =>
+                {
+                    var whoisHost = server;
+
+                    if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
+                    {
+                        whoisHost = "whois.nic.ir";
+                    }
+
+                    foreach (DataGridViewRow row in dgvResult.Rows)
+                    {
+                        if (_cts.IsCancellationRequested) return;
+
+                        var whois = new WhoisHelper();
+                        var res = await whois.WhoiseCheckState(row.Cells[0].Value.ToString(), extension, whoisHost, false, _cts.Token);
+                        SetCellStyle(row.Cells[extension], res);
+                        InvokeIfRequire(() => progResult.Value++);
+                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {dgvResult.Rows.Count * _selectedExtensions.Count} domain");
+                    }
+                }));
+            }
+
+            await Task.Run(() => Task.WaitAll(tasks.ToArray()));
         }
 
         private void SetCellStyle(DataGridViewCell cell, WhoisInfo data)
@@ -224,7 +223,7 @@ namespace WHOis
             InvokeIfRequire(() => btnCancel.Enabled = !active);
             InvokeIfRequire(() => txtHostName.ReadOnly = !active);
         }
-        public void InvokeIfRequire(Action act)
+        private void InvokeIfRequire(Action act)
         {
             if (InvokeRequired)
             {
@@ -235,49 +234,6 @@ namespace WHOis
                 act();
             }
         }
-        private string[] GetDisplayResult()
-        {
-            var rows = new List<string>();
-            var buffer = "";
-            var line = "";
-
-            foreach (DataGridViewColumn col in dgvResult.Columns)
-            {
-                buffer += $"|  {col.HeaderText} ".AddFlowChars(PrintColumnWidth, ' ') + "\t";
-            }
-            rows.Add(buffer); // add header
-
-            // create header line acourding header char lenght like: =============
-            line = "|".AddFlowChars((dgvResult.Columns.Count - 1) * PrintColumnWidth, '=');
-            rows.Add(line); // add header line
-
-            line = line.Replace("=", "--"); // other lines like: ---------------------
-
-            foreach (DataGridViewRow row in dgvResult.Rows)
-            {
-                buffer = "";
-
-                foreach (DataGridViewColumn col in dgvResult.Columns)
-                {
-                    var val = row.Cells[col.Name].Value.ToString();
-
-                    if (val == CheckState.Indeterminate.ToString())
-                        val = "Reserved";
-                    else if (val == CheckState.Checked.ToString())
-                        val = "Free";
-                    else if (val == CheckState.Unchecked.ToString())
-                        val = "Error";
-
-                    buffer += $"|  {val}".AddFlowChars(PrintColumnWidth, ' ') + "\t";
-                }
-
-                rows.Add(buffer);
-                rows.Add(line);
-            }
-
-            return rows.ToArray();
-        }
-
 
     }
 }

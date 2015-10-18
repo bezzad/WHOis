@@ -57,7 +57,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringFiltering.cs" />
+    <Compile Include="StringHelper.cs" />
     <Compile Include="WhoisEventArgs.cs" />
     <Compile Include="WhoisHelper.cs" />
     <Compile Include="WhoisInfo.cs" />
