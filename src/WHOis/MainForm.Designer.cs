@@ -56,6 +56,7 @@
             this.lblProcessPercent = new System.Windows.Forms.Label();
             this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblNamesCounter = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -121,6 +122,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.lblNamesCounter);
             this.groupBox1.Controls.Add(this.btnPreCompile);
             this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.btnCancel);
@@ -367,6 +369,16 @@
             this.colDomain.ReadOnly = true;
             this.colDomain.Width = 85;
             // 
+            // lblNamesCounter
+            // 
+            this.lblNamesCounter.AutoSize = true;
+            this.lblNamesCounter.ForeColor = System.Drawing.Color.Green;
+            this.lblNamesCounter.Location = new System.Drawing.Point(80, 56);
+            this.lblNamesCounter.Name = "lblNamesCounter";
+            this.lblNamesCounter.Size = new System.Drawing.Size(13, 13);
+            this.lblNamesCounter.TabIndex = 18;
+            this.lblNamesCounter.Text = "0";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -419,6 +431,7 @@
         private System.Windows.Forms.Button btnPreCompile;
         private System.Windows.Forms.Label lblProcessPercent;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
+        private System.Windows.Forms.Label lblNamesCounter;
     }
 }
 

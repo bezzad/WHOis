@@ -14,6 +14,7 @@ namespace WHOis
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
 
+        
         readonly List<string> _selectedExtensions;
         public int PrintColumnWidth = 30;
 
@@ -23,7 +24,8 @@ namespace WHOis
 
             _selectedExtensions = new List<string>();
 
-            this.Text = $"WHOis  Onlin Domain Database   ver {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+            this.Text = $"WHOis  Online Domain Database   version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+            
         }
 
 
@@ -34,7 +36,8 @@ namespace WHOis
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
                 _cts = new CancellationTokenSource();
                 btnPreCompile.PerformClick();
-                string[] names = GetNamesByPreCompile(txtHostName.Text);
+                string[] names = txtHostName.Text.GetNamesByPreCompile();
+                InvokeIfRequire(() => lblNamesCounter.Text = names.Length.ToString());
                 UiActivation(false);
 
 
@@ -170,8 +173,9 @@ namespace WHOis
         }
         private void btnPreCompile_Click(object sender, EventArgs e)
         {
-            var names = GetNamesByPreCompile(txtHostName.Text);
-            txtHostName.Text = string.Join("\r\n", names);
+            var names = txtHostName.Text.GetNamesByPreCompile();
+            InvokeIfRequire(() => lblNamesCounter.Text = names.Length.ToString());
+            InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", names));
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -231,57 +235,6 @@ namespace WHOis
                 act();
             }
         }
-        private string[] GetNamesByPreCompile(string text)
-        {
-            var names = text.Split(new[]
-            {
-                "\r\n",
-                ",",
-                ":",
-                "'",
-                "\"",
-                ";",
-                ".",
-                "&",
-                "~",
-                "!",
-                "@",
-                "#",
-                "$",
-                "%",
-                "^",
-                "*",
-                "(",
-                ")",
-                "-",
-                "+",
-                "_",
-                "+",
-                "=",
-                @"\",
-                "|",
-                "{",
-                "}",
-                "`",
-                "?",
-                "/",
-                "<",
-                ">",
-                "[",
-                "]",
-                " "
-            }, StringSplitOptions.RemoveEmptyEntries);
-
-            List<string> preCompiledNames = new List<string>();
-            foreach (var name in names)
-            {
-                if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) continue;
-
-                preCompiledNames.Add(name);
-            }
-
-            return preCompiledNames.ToArray();
-        }
         private string[] GetDisplayResult()
         {
             var rows = new List<string>();
@@ -290,12 +243,12 @@ namespace WHOis
 
             foreach (DataGridViewColumn col in dgvResult.Columns)
             {
-                buffer += AddFlowChar($"|  {col.HeaderText} ", PrintColumnWidth, ' ') + "\t";
+                buffer += $"|  {col.HeaderText} ".AddFlowChars(PrintColumnWidth, ' ') + "\t";
             }
             rows.Add(buffer); // add header
 
             // create header line acourding header char lenght like: =============
-            line = AddFlowChar("|", (dgvResult.Columns.Count - 1) * PrintColumnWidth, '=');
+            line = "|".AddFlowChars((dgvResult.Columns.Count - 1) * PrintColumnWidth, '=');
             rows.Add(line); // add header line
 
             line = line.Replace("=", "--"); // other lines like: ---------------------
@@ -315,7 +268,7 @@ namespace WHOis
                     else if (val == CheckState.Unchecked.ToString())
                         val = "Error";
 
-                    buffer += AddFlowChar($"|  {val}", PrintColumnWidth, ' ') + "\t"; ;
+                    buffer += $"|  {val}".AddFlowChars(PrintColumnWidth, ' ') + "\t";
                 }
 
                 rows.Add(buffer);
@@ -324,15 +277,7 @@ namespace WHOis
 
             return rows.ToArray();
         }
-        private string AddFlowChar(string item, int fitLength, char flow)
-        {
-            for (fitLength = fitLength - item.Length; fitLength > 0; fitLength--)
-            {
-                item += flow.ToString();
-            }
 
-            return item;
-        }
 
     }
 }
