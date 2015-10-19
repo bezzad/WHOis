@@ -16,7 +16,7 @@ namespace WHOis
         private CancellationTokenSource _ctsOnDoubleClick;
         readonly List<string> _selectedExtensions;
         bool closing = false;
-
+        object _lockObj = new object();
 
         public MainForm()
         {
@@ -43,7 +43,7 @@ namespace WHOis
                 if (_names.Length == 0 || _selectedExtensions.Count == 0) return;
 
                 InvokeIfRequire(() => progResult.Maximum = _names.Length * _selectedExtensions.Count);
-                SetProgress(0);
+                IncreaseProgress(true);
 
                 await Task.Run(() =>
                 {
@@ -77,7 +77,7 @@ namespace WHOis
         private void WhoisHelper_Progress(object sender, WhoisInfo e)
         {
             SetCellStyle(e);
-            SetProgress(progResult.Value + 1);
+            IncreaseProgress();
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -192,10 +192,15 @@ namespace WHOis
         }
 
 
-        private void SetProgress(int value)
+        private void IncreaseProgress(bool setZero = false)
         {
-            if (progResult.Value < progResult.Maximum)
-                InvokeIfRequire(() => progResult.Value = value);
+            lock (_lockObj)
+            {
+                if (setZero)
+                    InvokeIfRequire(() => progResult.Value = 0);
+                else if (progResult.Value < progResult.Maximum)
+                    InvokeIfRequire(() => progResult.Value++);
+            }
             InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {progResult.Maximum} domain");
         }
         private async Task UpdateCell(DataGridViewCell cell)
