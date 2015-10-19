@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace WHOis
 {
@@ -14,6 +15,7 @@ namespace WHOis
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
         readonly List<string> _selectedExtensions;
+        bool closing = false;
 
 
         public MainForm()
@@ -23,7 +25,6 @@ namespace WHOis
             _selectedExtensions = new List<string>();
 
             this.Text = $"WHOis  Online Domain Database   version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
-
         }
 
 
@@ -34,20 +35,19 @@ namespace WHOis
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
                 _cts = new CancellationTokenSource();
                 btnPreCompile.PerformClick();
-                string[] names = txtHostName.Text.GetNamesByPreCompile();
-                InvokeIfRequire(() => lblNamesCounter.Text = names.Length.ToString());
+                string[] _names = txtHostName.Text.GetNamesByPreCompile();
+                InvokeIfRequire(() => lblNamesCounter.Text = _names.Length.ToString());
                 UiActivation(false);
 
 
-                if (names.Length == 0 || _selectedExtensions.Count == 0) return;
+                if (_names.Length == 0 || _selectedExtensions.Count == 0) return;
 
-                InvokeIfRequire(() => progResult.Maximum = names.Length * _selectedExtensions.Count);
-                InvokeIfRequire(() => progResult.Value = 0);
-                InvokeIfRequire(() => lblProcessPercent.Text = $"0 / {names.Length * _selectedExtensions.Count} domain");
+                InvokeIfRequire(() => progResult.Maximum = _names.Length * _selectedExtensions.Count);
+                SetProgress(0);
 
                 await Task.Run(() =>
                 {
-                    foreach (var url in names)
+                    foreach (var url in _names)
                     {
                         if (_cts.IsCancellationRequested) return;
 
@@ -55,12 +55,29 @@ namespace WHOis
                     }
                 });
 
-                await WhoisParallel();
+                var server = cmbServer.Text;
+                var tasks = new List<Task>();
+                var lstRows = new List<DataGridViewRow>();
+
+                foreach (DataGridViewRow row in dgvResult.Rows)
+                {
+                    lstRows.Add(row);
+                }
+
+                WhoisHelper.Progress += WhoisHelper_Progress;
+                await WhoisHelper.WhoisParallel(lstRows, _selectedExtensions, server, _cts);
             }
             finally
             {
+                InvokeIfRequire(() => progResult.Value = progResult.Maximum);
+                MessageBox.Show("Whois Completed");
                 UiActivation(true);
             }
+        }
+        private void WhoisHelper_Progress(object sender, WhoisInfo e)
+        {
+            SetCellStyle(e);
+            SetProgress(progResult.Value + 1);
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -83,23 +100,7 @@ namespace WHOis
                 _ctsOnDoubleClick = new CancellationTokenSource();
 
             DataGridViewCell cell = dgvResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            cell.Style.BackColor = System.Drawing.Color.OrangeRed;
-
-            if (!string.IsNullOrEmpty(cell.ErrorText))
-            {
-                string server = cmbServer.Text;
-
-                if (cell.OwningColumn.HeaderText.Equals(".ir", StringComparison.OrdinalIgnoreCase))
-                {
-                    server = "whois.nic.ir";
-                }
-
-                var whois = new WhoisHelper();
-                var res = await whois.WhoiseCheckState(cell.OwningRow.Cells[0].Value.ToString(),
-                    cell.OwningColumn.HeaderText.Substring(1), server, false, _ctsOnDoubleClick.Token);
-
-                SetCellStyle(cell, res);
-            }
+            await UpdateCell(cell);
         }
         private void ChkDomain_CheckStateChanged(object sender, EventArgs e)
         {
@@ -156,62 +157,79 @@ namespace WHOis
                 Process.Start(dlgSave.FileName);
             }
         }
-
-
-
-        private async Task WhoisParallel()
+        private async void btnReTryErrorCells_Click(object sender, EventArgs e)
         {
-            var server = cmbServer.Text;
-            var tasks = new List<Task>();
-
-            foreach (var extension in _selectedExtensions)
+            try
             {
-                if (_cts.IsCancellationRequested) return;
+                UiActivation(false);
 
-                tasks.Add(Task.Run(async () =>
+                if (_ctsOnDoubleClick == null || _ctsOnDoubleClick.IsCancellationRequested)
+                    _ctsOnDoubleClick = new CancellationTokenSource();
+
+                foreach (DataGridViewRow row in dgvResult.Rows)
                 {
-                    var whoisHost = server;
-
-                    if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
+                    for (int col = 1; col < dgvResult.Columns.Count; col++)
                     {
-                        whoisHost = "whois.nic.ir";
-                    }
+                        var cell = row.Cells[col];
 
-                    foreach (DataGridViewRow row in dgvResult.Rows)
-                    {
-                        if (_cts.IsCancellationRequested) return;
-
-                        var whois = new WhoisHelper();
-                        var res = await whois.WhoiseCheckState(row.Cells[0].Value.ToString(), extension, whoisHost, false, _cts.Token);
-                        SetCellStyle(row.Cells[extension], res);
-                        InvokeIfRequire(() => progResult.Value++);
-                        InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {dgvResult.Rows.Count * _selectedExtensions.Count} domain");
+                        if (cell.Value is CheckState && (CheckState)cell.Value == CheckState.Unchecked && !string.IsNullOrEmpty(cell.ErrorText))
+                            await UpdateCell(cell);
                     }
-                }));
+                }
+            }
+            finally
+            {
+                UiActivation(true);
             }
 
-            await Task.Run(() => Task.WaitAll(tasks.ToArray()));
         }
 
-        private void SetCellStyle(DataGridViewCell cell, WhoisInfo data)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            InvokeIfRequire(() => cell.Value = data.ReserveState);
+            base.OnClosing(e);
+
+            closing = true;
+        }
+
+
+        private void SetProgress(int value)
+        {
+            if (progResult.Value < progResult.Maximum)
+                InvokeIfRequire(() => progResult.Value = value);
+            InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {progResult.Maximum} domain");
+        }
+        private async Task UpdateCell(DataGridViewCell cell)
+        {
+            cell.Style.BackColor = System.Drawing.Color.OrangeRed;
+
+            if (!string.IsNullOrEmpty(cell.ErrorText))
+            {
+                string server = cmbServer.Text;
+
+                var res = await Task.Run(() => WhoisHelper.WhoisExtension(cell.OwningRow, cell.OwningColumn.HeaderText.Substring(1), server));
+
+                SetCellStyle(res);
+            }
+        }
+        private void SetCellStyle(WhoisInfo data)
+        {
+            InvokeIfRequire(() => data.Cell.Value = data.ReserveState);
 
             if (data.ReserveState == CheckState.Unchecked)
             {
-                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.Coral);
-                InvokeIfRequire(() => cell.ErrorText = data?.ErrorLogArgs.Message ?? " ");
-                InvokeIfRequire(() => cell.ErrorText += "\r\n Double Click to rewhois");
+                InvokeIfRequire(() => data.Cell.Style.BackColor = System.Drawing.Color.Coral);
+                InvokeIfRequire(() => data.Cell.ErrorText = data?.ErrorLogArgs.Message ?? " ");
+                InvokeIfRequire(() => data.Cell.ErrorText += "\r\n Double Click to rewhois");
             }
             else if (data.ReserveState == CheckState.Checked)
             {
-                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.LightGreen);
-                InvokeIfRequire(() => cell.ErrorText = null);
+                InvokeIfRequire(() => data.Cell.Style.BackColor = System.Drawing.Color.LightGreen);
+                InvokeIfRequire(() => data.Cell.ErrorText = null);
             }
             else if (data.ReserveState == CheckState.Indeterminate)
             {
-                InvokeIfRequire(() => cell.Style.BackColor = System.Drawing.Color.LightPink);
-                InvokeIfRequire(() => cell.ErrorText = null);
+                InvokeIfRequire(() => data.Cell.Style.BackColor = System.Drawing.Color.LightPink);
+                InvokeIfRequire(() => data.Cell.ErrorText = null);
             }
         }
         private void UiActivation(bool active)
@@ -219,21 +237,27 @@ namespace WHOis
             InvokeIfRequire(() => cmbServer.Enabled = active);
             InvokeIfRequire(() => grbExtensions.Enabled = active);
             InvokeIfRequire(() => btnLookUp.Enabled = active);
+            InvokeIfRequire(() => btnReTryErrorCells.Enabled = active);
             InvokeIfRequire(() => btnPreCompile.Enabled = active);
             InvokeIfRequire(() => btnCancel.Enabled = !active);
             InvokeIfRequire(() => txtHostName.ReadOnly = !active);
         }
         private void InvokeIfRequire(Action act)
         {
-            if (InvokeRequired)
+            try
             {
-                Invoke(act);
+                if (InvokeRequired && !closing)
+                {
+                    Invoke(act);
+                }
+                else if (!closing)
+                {
+                    act();
+                }
             }
-            else
-            {
-                act();
-            }
+            catch (Exception) { }
         }
+
 
     }
 }

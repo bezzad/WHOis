@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WHOis
 {
-    public class WhoisEventArgs : EventArgs
+    public class WhoisErrorEventArgs
     {
         public string Message { get; protected set; }
 
@@ -15,7 +19,7 @@ namespace WHOis
         public bool ReWhoisRequired { get; protected set; }
 
 
-        public WhoisEventArgs(string domain, string postfix, string server, bool reWhois, string logFormat, params object[] args)
+        public WhoisErrorEventArgs(string domain, string postfix, string server, bool reWhois, string logFormat, params object[] args)
         {
             Message = string.Format(logFormat, args);
             DomainName = domain;

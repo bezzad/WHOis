@@ -37,6 +37,7 @@
             this.cmbServer = new System.Windows.Forms.ComboBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtHostName = new System.Windows.Forms.RichTextBox();
             this.lblNamesCounter = new System.Windows.Forms.Label();
             this.btnPreCompile = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
@@ -56,7 +57,7 @@
             this.lblProcessPercent = new System.Windows.Forms.Label();
             this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtHostName = new System.Windows.Forms.RichTextBox();
+            this.btnReTryErrorCells = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -67,20 +68,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 27);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 17);
+            this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Server:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 69);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(6, 56);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 17);
+            this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Host Names:";
             // 
@@ -92,20 +91,18 @@
             "whois.ripe.net",
             "whois.arin.net",
             "whois.nic.ir"});
-            this.cmbServer.Location = new System.Drawing.Point(71, 27);
-            this.cmbServer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbServer.Location = new System.Drawing.Point(53, 22);
             this.cmbServer.Name = "cmbServer";
-            this.cmbServer.Size = new System.Drawing.Size(271, 24);
+            this.cmbServer.Size = new System.Drawing.Size(204, 21);
             this.cmbServer.TabIndex = 3;
             // 
             // btnLookUp
             // 
             this.btnLookUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnLookUp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLookUp.Location = new System.Drawing.Point(251, 473);
-            this.btnLookUp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLookUp.Location = new System.Drawing.Point(188, 384);
             this.btnLookUp.Name = "btnLookUp";
-            this.btnLookUp.Size = new System.Drawing.Size(184, 33);
+            this.btnLookUp.Size = new System.Drawing.Size(138, 27);
             this.btnLookUp.TabIndex = 5;
             this.btnLookUp.Text = "Look Up";
             this.btnLookUp.UseVisualStyleBackColor = true;
@@ -115,6 +112,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.btnReTryErrorCells);
             this.groupBox1.Controls.Add(this.txtHostName);
             this.groupBox1.Controls.Add(this.lblNamesCounter);
             this.groupBox1.Controls.Add(this.btnPreCompile);
@@ -126,33 +124,41 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.btnLookUp);
-            this.groupBox1.Location = new System.Drawing.Point(16, 140);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(12, 114);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(443, 514);
+            this.groupBox1.Size = new System.Drawing.Size(332, 418);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
+            // 
+            // txtHostName
+            // 
+            this.txtHostName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtHostName.Location = new System.Drawing.Point(5, 72);
+            this.txtHostName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtHostName.Name = "txtHostName";
+            this.txtHostName.Size = new System.Drawing.Size(179, 276);
+            this.txtHostName.TabIndex = 19;
+            this.txtHostName.Text = "";
             // 
             // lblNamesCounter
             // 
             this.lblNamesCounter.AutoSize = true;
             this.lblNamesCounter.ForeColor = System.Drawing.Color.Green;
-            this.lblNamesCounter.Location = new System.Drawing.Point(107, 69);
-            this.lblNamesCounter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblNamesCounter.Location = new System.Drawing.Point(80, 56);
             this.lblNamesCounter.Name = "lblNamesCounter";
-            this.lblNamesCounter.Size = new System.Drawing.Size(16, 17);
+            this.lblNamesCounter.Size = new System.Drawing.Size(13, 13);
             this.lblNamesCounter.TabIndex = 18;
             this.lblNamesCounter.Text = "0";
             // 
             // btnPreCompile
             // 
             this.btnPreCompile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPreCompile.Location = new System.Drawing.Point(251, 363);
-            this.btnPreCompile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnPreCompile.Location = new System.Drawing.Point(188, 279);
             this.btnPreCompile.Name = "btnPreCompile";
-            this.btnPreCompile.Size = new System.Drawing.Size(156, 33);
+            this.btnPreCompile.Size = new System.Drawing.Size(117, 27);
             this.btnPreCompile.TabIndex = 17;
             this.btnPreCompile.Text = "Parse Host Names";
             this.btnPreCompile.UseVisualStyleBackColor = true;
@@ -161,10 +167,9 @@
             // btnSave
             // 
             this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSave.Location = new System.Drawing.Point(251, 322);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSave.Location = new System.Drawing.Point(188, 246);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(156, 33);
+            this.btnSave.Size = new System.Drawing.Size(117, 27);
             this.btnSave.TabIndex = 16;
             this.btnSave.Text = "Save WHOis Result";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -175,10 +180,9 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancel.Enabled = false;
-            this.btnCancel.Location = new System.Drawing.Point(12, 473);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Location = new System.Drawing.Point(9, 384);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(184, 33);
+            this.btnCancel.Size = new System.Drawing.Size(138, 27);
             this.btnCancel.TabIndex = 15;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -191,11 +195,9 @@
             this.grbExtensions.Controls.Add(this.chkInfo);
             this.grbExtensions.Controls.Add(this.chkIr);
             this.grbExtensions.Controls.Add(this.chkNet);
-            this.grbExtensions.Location = new System.Drawing.Point(251, 89);
-            this.grbExtensions.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.grbExtensions.Location = new System.Drawing.Point(188, 72);
             this.grbExtensions.Name = "grbExtensions";
-            this.grbExtensions.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.grbExtensions.Size = new System.Drawing.Size(156, 207);
+            this.grbExtensions.Size = new System.Drawing.Size(117, 168);
             this.grbExtensions.TabIndex = 14;
             this.grbExtensions.TabStop = false;
             this.grbExtensions.Text = "Domain Extension";
@@ -204,10 +206,9 @@
             // 
             this.chkCc.AutoSize = true;
             this.chkCc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkCc.Location = new System.Drawing.Point(43, 162);
-            this.chkCc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCc.Location = new System.Drawing.Point(32, 132);
             this.chkCc.Name = "chkCc";
-            this.chkCc.Size = new System.Drawing.Size(53, 24);
+            this.chkCc.Size = new System.Drawing.Size(44, 20);
             this.chkCc.TabIndex = 13;
             this.chkCc.Text = ".cc";
             this.chkCc.UseVisualStyleBackColor = true;
@@ -218,10 +219,9 @@
             this.chkCom.Checked = true;
             this.chkCom.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkCom.Location = new System.Drawing.Point(43, 34);
-            this.chkCom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCom.Location = new System.Drawing.Point(32, 28);
             this.chkCom.Name = "chkCom";
-            this.chkCom.Size = new System.Drawing.Size(72, 24);
+            this.chkCom.Size = new System.Drawing.Size(59, 20);
             this.chkCom.TabIndex = 9;
             this.chkCom.Text = ". com";
             this.chkCom.UseVisualStyleBackColor = true;
@@ -230,10 +230,9 @@
             // 
             this.chkInfo.AutoSize = true;
             this.chkInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkInfo.Location = new System.Drawing.Point(43, 130);
-            this.chkInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkInfo.Location = new System.Drawing.Point(32, 106);
             this.chkInfo.Name = "chkInfo";
-            this.chkInfo.Size = new System.Drawing.Size(62, 24);
+            this.chkInfo.Size = new System.Drawing.Size(51, 20);
             this.chkInfo.TabIndex = 12;
             this.chkInfo.Text = ".info";
             this.chkInfo.UseVisualStyleBackColor = true;
@@ -241,13 +240,10 @@
             // chkIr
             // 
             this.chkIr.AutoSize = true;
-            this.chkIr.Checked = true;
-            this.chkIr.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkIr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkIr.Location = new System.Drawing.Point(43, 66);
-            this.chkIr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkIr.Location = new System.Drawing.Point(32, 54);
             this.chkIr.Name = "chkIr";
-            this.chkIr.Size = new System.Drawing.Size(50, 24);
+            this.chkIr.Size = new System.Drawing.Size(40, 20);
             this.chkIr.TabIndex = 10;
             this.chkIr.Text = ". ir";
             this.chkIr.UseVisualStyleBackColor = true;
@@ -256,10 +252,9 @@
             // 
             this.chkNet.AutoSize = true;
             this.chkNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
-            this.chkNet.Location = new System.Drawing.Point(43, 98);
-            this.chkNet.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkNet.Location = new System.Drawing.Point(32, 80);
             this.chkNet.Name = "chkNet";
-            this.chkNet.Size = new System.Drawing.Size(63, 24);
+            this.chkNet.Size = new System.Drawing.Size(51, 20);
             this.chkNet.TabIndex = 11;
             this.chkNet.Text = ". net";
             this.chkNet.UseVisualStyleBackColor = true;
@@ -269,10 +264,9 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(8, 431);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(6, 350);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(140, 17);
+            this.label6.Size = new System.Drawing.Size(106, 13);
             this.label6.TabIndex = 6;
             this.label6.Text = "Provide Hostnames *";
             this.label6.Visible = false;
@@ -280,10 +274,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::WHOis.Properties.Resources._1377639655_Connected;
-            this.pictureBox1.Location = new System.Drawing.Point(16, 15);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(107, 84);
+            this.pictureBox1.Size = new System.Drawing.Size(80, 68);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
@@ -292,10 +285,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(131, 15);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(98, 12);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(172, 54);
+            this.label4.Size = new System.Drawing.Size(136, 42);
             this.label4.TabIndex = 10;
             this.label4.Text = "WHOis";
             // 
@@ -303,10 +295,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Green;
-            this.label5.Location = new System.Drawing.Point(156, 66);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(117, 54);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(144, 17);
+            this.label5.Size = new System.Drawing.Size(109, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Get Your Domain Info";
             // 
@@ -314,10 +305,9 @@
             // 
             this.progResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progResult.Location = new System.Drawing.Point(8, 576);
-            this.progResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progResult.Location = new System.Drawing.Point(6, 468);
             this.progResult.Name = "progResult";
-            this.progResult.Size = new System.Drawing.Size(579, 28);
+            this.progResult.Size = new System.Drawing.Size(434, 23);
             this.progResult.TabIndex = 7;
             // 
             // grbResult
@@ -328,11 +318,9 @@
             this.grbResult.Controls.Add(this.lblProcessPercent);
             this.grbResult.Controls.Add(this.dgvResult);
             this.grbResult.Controls.Add(this.progResult);
-            this.grbResult.Location = new System.Drawing.Point(467, 43);
-            this.grbResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.grbResult.Location = new System.Drawing.Point(350, 35);
             this.grbResult.Name = "grbResult";
-            this.grbResult.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.grbResult.Size = new System.Drawing.Size(752, 610);
+            this.grbResult.Size = new System.Drawing.Size(564, 496);
             this.grbResult.TabIndex = 12;
             this.grbResult.TabStop = false;
             this.grbResult.Text = "WHOis Details";
@@ -340,10 +328,9 @@
             // lblProcessPercent
             // 
             this.lblProcessPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblProcessPercent.Location = new System.Drawing.Point(595, 576);
-            this.lblProcessPercent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblProcessPercent.Location = new System.Drawing.Point(446, 468);
             this.lblProcessPercent.Name = "lblProcessPercent";
-            this.lblProcessPercent.Size = new System.Drawing.Size(149, 28);
+            this.lblProcessPercent.Size = new System.Drawing.Size(112, 23);
             this.lblProcessPercent.TabIndex = 9;
             this.lblProcessPercent.Text = "0 / 0";
             this.lblProcessPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -368,8 +355,7 @@
             this.dgvResult.ColumnHeadersHeight = 40;
             this.dgvResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colDomain});
-            this.dgvResult.Location = new System.Drawing.Point(8, 23);
-            this.dgvResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvResult.Location = new System.Drawing.Point(6, 19);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.ReadOnly = true;
             this.dgvResult.RowHeadersVisible = false;
@@ -378,7 +364,7 @@
             this.dgvResult.RowTemplate.Height = 30;
             this.dgvResult.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvResult.Size = new System.Drawing.Size(736, 545);
+            this.dgvResult.Size = new System.Drawing.Size(552, 443);
             this.dgvResult.TabIndex = 8;
             this.dgvResult.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellDoubleClick);
             // 
@@ -392,31 +378,30 @@
             this.colDomain.HeaderText = "Domain";
             this.colDomain.Name = "colDomain";
             this.colDomain.ReadOnly = true;
-            this.colDomain.Width = 104;
+            this.colDomain.Width = 85;
             // 
-            // txtHostName
+            // btnReTryErrorCells
             // 
-            this.txtHostName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtHostName.Location = new System.Drawing.Point(7, 89);
-            this.txtHostName.Name = "txtHostName";
-            this.txtHostName.Size = new System.Drawing.Size(237, 339);
-            this.txtHostName.TabIndex = 19;
-            this.txtHostName.Text = "";
+            this.btnReTryErrorCells.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReTryErrorCells.Location = new System.Drawing.Point(188, 312);
+            this.btnReTryErrorCells.Name = "btnReTryErrorCells";
+            this.btnReTryErrorCells.Size = new System.Drawing.Size(117, 27);
+            this.btnReTryErrorCells.TabIndex = 20;
+            this.btnReTryErrorCells.Text = "Retry Error Cells";
+            this.btnReTryErrorCells.UseVisualStyleBackColor = true;
+            this.btnReTryErrorCells.Click += new System.EventHandler(this.btnReTryErrorCells_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1235, 670);
+            this.ClientSize = new System.Drawing.Size(926, 544);
             this.Controls.Add(this.grbResult);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "WHOis  Onlin Domain Database";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -459,6 +444,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colDomain;
         private System.Windows.Forms.Label lblNamesCounter;
         private System.Windows.Forms.RichTextBox txtHostName;
+        private System.Windows.Forms.Button btnReTryErrorCells;
     }
 }
 

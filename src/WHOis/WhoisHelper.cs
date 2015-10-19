@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,12 +16,17 @@ namespace WHOis
         StreamWriter _strmSend;
         StreamReader _strmRecive;
 
-        public event EventHandler<WhoisEventArgs> WhoisLog;
-        private void OnWhoisLog(WhoisEventArgs e)
+        public event EventHandler<WhoisErrorEventArgs> WhoisLog;
+        private void OnWhoisLog(WhoisErrorEventArgs e)
         {
-            WhoisLog?.Invoke(null, e);
+            WhoisLog?.Invoke(this, e);
         }
 
+        public static event EventHandler<WhoisInfo> Progress;
+        private static void OnProgress(WhoisInfo e)
+        {
+            Progress?.Invoke(null, e);
+        }
 
         /// <summary>
         /// WHOis a domain to know is reserved or not 
@@ -30,96 +37,130 @@ namespace WHOis
         /// <param name="fullResponse">Set Whois info completely</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>False if reserved and True if free</returns>
-        public async Task<WhoisInfo> WhoiseCheckState(string name, string postfix, string server, bool fullResponse, System.Threading.CancellationToken ct)
+        public WhoisInfo WhoiseCheckState(string name, string postfix, string server, bool fullResponse)
         {
-            return await Task.Run(() =>
+            var result = new WhoisInfo();
+
+            try
             {
-                var result = new WhoisInfo();                
+                //CONNECT TO TCP CLIENT OF WHOIS
+                _tcpWhois = new TcpClient(server, 43);
+
+                //SETUP THE NETWORK STREAM
+                _nsWhois = _tcpWhois.GetStream();
+
+                //GET THE DATA IN THE BUFFER FROM THE NETWORK STREAM
+                _bfWhois = new BufferedStream(_nsWhois);
+
+                _strmSend = new StreamWriter(_bfWhois);
+
+                _strmSend.WriteLine(name + "." + postfix);
+                _strmSend.Flush();
+
 
                 try
                 {
-                    //CONNECT TO TCP CLIENT OF WHOIS
-                    _tcpWhois = new TcpClient(server, 43);
+                    _strmRecive = new StreamReader(_bfWhois);
+                    string response;
 
-                    //SETUP THE NETWORK STREAM
-                    _nsWhois = _tcpWhois.GetStream();
-
-                    //GET THE DATA IN THE BUFFER FROM THE NETWORK STREAM
-                    _bfWhois = new BufferedStream(_nsWhois);
-
-                    _strmSend = new StreamWriter(_bfWhois);
-
-                    _strmSend.WriteLine(name + "." + postfix);
-                    _strmSend.Flush();
-
-
-                    try
+                    while ((response = _strmRecive.ReadLine()) != null)
                     {
-                        _strmRecive = new StreamReader(_bfWhois);
-                        string response;
+                        result.Info += response + "\r\n";
 
-                        while ((response = _strmRecive.ReadLine()) != null)
-                        {
-                            result.Info += response + "\r\n";
-
-                            if (!fullResponse &&
-                                (result.Info.Contains("No match for ") || result.Info.Contains("no entries found")))
-                                break;
-                        }
-                    }
-                    catch (Exception exp)
-                    {
-                        result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, true, "WHOis Server Error: {0}",
-                            exp.Message);
-
-                        OnWhoisLog(result.ErrorLogArgs);
-                        result.ReserveState = CheckState.Unchecked;
-                        return result;
+                        if (!fullResponse &&
+                            (result.Info.Contains("No match for ") || result.Info.Contains("no entries found")))
+                            break;
                     }
                 }
                 catch (Exception exp)
                 {
-                    result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, true,
-                        "No Internet Connection or Any other Fault.{1} Error: {0}", exp.Message, Environment.NewLine);
+                    result.ErrorLogArgs = new WhoisErrorEventArgs(name, postfix, server, true, "WHOis Server Error: {0}",
+                        exp.Message);
 
                     OnWhoisLog(result.ErrorLogArgs);
                     result.ReserveState = CheckState.Unchecked;
                     return result;
                 }
+            }
+            catch (Exception exp)
+            {
+                result.ErrorLogArgs = new WhoisErrorEventArgs(name, postfix, server, true,
+                    "No Internet Connection or Any other Fault.{1} Error: {0}", exp.Message, Environment.NewLine);
 
-                //SEND THE WHO_IS SERVER ABOUT THE HOSTNAME
-                finally
+                OnWhoisLog(result.ErrorLogArgs);
+                result.ReserveState = CheckState.Unchecked;
+                return result;
+            }
+
+            //SEND THE WHO_IS SERVER ABOUT THE HOSTNAME
+            finally
+            {
+                try
                 {
-                    try
-                    {
-                        _tcpWhois?.Close();
-                    }
-                    catch (Exception exp)
-                    {
-                        result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, false,
-                            "Connection Closing Error: {0}",
-                            exp.Message);
-
-                        OnWhoisLog(result.ErrorLogArgs);
-                    }
+                    _tcpWhois?.Close();
                 }
-
-                if (string.IsNullOrEmpty(result.Info))
+                catch (Exception exp)
                 {
-                    result.ReserveState = CheckState.Unchecked;
-                    result.ErrorLogArgs = new WhoisEventArgs(name, postfix, server, true, "No Response: Unknown exception caused to couldn't response from server!");
+                    result.ErrorLogArgs = new WhoisErrorEventArgs(name, postfix, server, false,
+                        "Connection Closing Error: {0}",
+                        exp.Message);
+
                     OnWhoisLog(result.ErrorLogArgs);
                 }
-                else
-                {
-                    result.ReserveState = result.Info.Contains("No match for") ||
-                                          result.Info.Contains("no entries found")
-                        ? CheckState.Checked
-                        : CheckState.Indeterminate;
-                }
+            }
 
-                return result;
-            }, ct);
+            if (string.IsNullOrEmpty(result.Info))
+            {
+                result.ReserveState = CheckState.Unchecked;
+                result.ErrorLogArgs = new WhoisErrorEventArgs(name, postfix, server, true, "No Response: Unknown exception caused to couldn't response from server!");
+                OnWhoisLog(result.ErrorLogArgs);
+            }
+            else
+            {
+                result.ReserveState = result.Info.Contains("No match for") ||
+                                      result.Info.Contains("no entries found")
+                    ? CheckState.Checked
+                    : CheckState.Indeterminate;
+            }
+
+            return result;
         }
+
+        public static async Task WhoisParallel(List<DataGridViewRow> rows, List<string> extensions, string server, CancellationTokenSource cts)
+        {
+            var tasks = new List<Task>();
+
+            foreach (var extension in extensions)
+            {
+                if (cts.IsCancellationRequested) return;
+
+                tasks.Add(Task.Run(() =>
+                {
+                    Parallel.ForEach(rows, (row, state) =>
+                    {
+                        if (cts.IsCancellationRequested) state.Break();
+
+                        OnProgress(WhoisExtension(row, extension, server));
+                    });
+                }));
+            }
+
+            await Task.Run(() => Task.WaitAll(tasks.ToArray()));
+        }
+        
+        public static WhoisInfo WhoisExtension(DataGridViewRow row, string extension, string server)
+        {
+            if (extension.Equals("ir", StringComparison.OrdinalIgnoreCase))
+            {
+                server = "whois.nic.ir";
+            }
+
+            var whois = new WhoisHelper();
+            var res = whois.WhoiseCheckState(row.Cells[0].Value.ToString(), extension, server, false);
+            res.Cell = row.Cells[extension];            
+
+            return res;
+        }
+
     }
 }
