@@ -15,7 +15,7 @@ namespace WHOis
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
         readonly List<string> _selectedExtensions;
-        bool closing = false;
+        bool closing = false;        
         object _lockObj = new object();
 
         public MainForm()
@@ -35,7 +35,7 @@ namespace WHOis
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
                 _cts = new CancellationTokenSource();
                 btnPreCompile.PerformClick();
-                string[] _names = txtHostName.Text.GetNamesByPreCompile();
+                string[] _names = txtHostName.Text.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
                 InvokeIfRequire(() => lblNamesCounter.Text = _names.Length.ToString());
                 UiActivation(false);
 
@@ -137,7 +137,7 @@ namespace WHOis
         }
         private void btnPreCompile_Click(object sender, EventArgs e)
         {
-            var names = txtHostName.Text.GetNamesByPreCompile();
+            var names = txtHostName.Text.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
             InvokeIfRequire(() => lblNamesCounter.Text = names.Length.ToString());
             InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", names));
         }
@@ -244,6 +244,7 @@ namespace WHOis
             InvokeIfRequire(() => btnLookUp.Enabled = active);
             InvokeIfRequire(() => btnReTryErrorCells.Enabled = active);
             InvokeIfRequire(() => btnPreCompile.Enabled = active);
+            InvokeIfRequire(() => chkAccecptDigitLetteral.Enabled = active);
             InvokeIfRequire(() => btnCancel.Enabled = !active);
             InvokeIfRequire(() => txtHostName.ReadOnly = !active);
         }
@@ -263,6 +264,9 @@ namespace WHOis
             catch (Exception) { }
         }
 
-
+        private void chkAccecptDigitLetteral_CheckedChanged(object sender, EventArgs e)
+        {
+            btnPreCompile.PerformClick();
+        }
     }
 }

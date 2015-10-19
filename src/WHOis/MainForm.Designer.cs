@@ -37,6 +37,7 @@
             this.cmbServer = new System.Windows.Forms.ComboBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnReTryErrorCells = new System.Windows.Forms.Button();
             this.txtHostName = new System.Windows.Forms.RichTextBox();
             this.lblNamesCounter = new System.Windows.Forms.Label();
             this.btnPreCompile = new System.Windows.Forms.Button();
@@ -57,7 +58,7 @@
             this.lblProcessPercent = new System.Windows.Forms.Label();
             this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnReTryErrorCells = new System.Windows.Forms.Button();
+            this.chkAccecptDigitLetteral = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -112,6 +113,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.chkAccecptDigitLetteral);
             this.groupBox1.Controls.Add(this.btnReTryErrorCells);
             this.groupBox1.Controls.Add(this.txtHostName);
             this.groupBox1.Controls.Add(this.lblNamesCounter);
@@ -131,13 +133,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
             // 
+            // btnReTryErrorCells
+            // 
+            this.btnReTryErrorCells.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReTryErrorCells.Location = new System.Drawing.Point(188, 312);
+            this.btnReTryErrorCells.Name = "btnReTryErrorCells";
+            this.btnReTryErrorCells.Size = new System.Drawing.Size(117, 27);
+            this.btnReTryErrorCells.TabIndex = 20;
+            this.btnReTryErrorCells.Text = "Retry Error Cells";
+            this.btnReTryErrorCells.UseVisualStyleBackColor = true;
+            this.btnReTryErrorCells.Click += new System.EventHandler(this.btnReTryErrorCells_Click);
+            // 
             // txtHostName
             // 
             this.txtHostName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHostName.Location = new System.Drawing.Point(5, 72);
-            this.txtHostName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtHostName.Margin = new System.Windows.Forms.Padding(2);
             this.txtHostName.Name = "txtHostName";
             this.txtHostName.Size = new System.Drawing.Size(179, 276);
             this.txtHostName.TabIndex = 19;
@@ -380,16 +393,18 @@
             this.colDomain.ReadOnly = true;
             this.colDomain.Width = 85;
             // 
-            // btnReTryErrorCells
+            // chkAccecptDigitLetteral
             // 
-            this.btnReTryErrorCells.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnReTryErrorCells.Location = new System.Drawing.Point(188, 312);
-            this.btnReTryErrorCells.Name = "btnReTryErrorCells";
-            this.btnReTryErrorCells.Size = new System.Drawing.Size(117, 27);
-            this.btnReTryErrorCells.TabIndex = 20;
-            this.btnReTryErrorCells.Text = "Retry Error Cells";
-            this.btnReTryErrorCells.UseVisualStyleBackColor = true;
-            this.btnReTryErrorCells.Click += new System.EventHandler(this.btnReTryErrorCells_Click);
+            this.chkAccecptDigitLetteral.AutoSize = true;
+            this.chkAccecptDigitLetteral.Checked = true;
+            this.chkAccecptDigitLetteral.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAccecptDigitLetteral.Location = new System.Drawing.Point(188, 350);
+            this.chkAccecptDigitLetteral.Name = "chkAccecptDigitLetteral";
+            this.chkAccecptDigitLetteral.Size = new System.Drawing.Size(122, 17);
+            this.chkAccecptDigitLetteral.TabIndex = 13;
+            this.chkAccecptDigitLetteral.Text = "Accept Digit Letteral";
+            this.chkAccecptDigitLetteral.UseVisualStyleBackColor = true;
+            this.chkAccecptDigitLetteral.CheckedChanged += new System.EventHandler(this.chkAccecptDigitLetteral_CheckedChanged);
             // 
             // MainForm
             // 
@@ -445,6 +460,7 @@
         private System.Windows.Forms.Label lblNamesCounter;
         private System.Windows.Forms.RichTextBox txtHostName;
         private System.Windows.Forms.Button btnReTryErrorCells;
+        private System.Windows.Forms.CheckBox chkAccecptDigitLetteral;
     }
 }
 

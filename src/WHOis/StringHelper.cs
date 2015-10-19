@@ -26,9 +26,9 @@ namespace WHOis
             };
         }
 
-        public static string[] GetNamesByPreCompile(this string text)
+        public static string[] GetNamesByPreCompile(this string text, bool isDigit)
         {
-            text = text.ClearNonAlphabetChars();
+            text = text.ClearNonAlphabetChars(isDigit);
             var names = text.Split(FilteringChars, StringSplitOptions.RemoveEmptyEntries);
 
             var preCompiledNames = new SortedList<string, string>();
@@ -56,12 +56,12 @@ namespace WHOis
             return ary;
         }
 
-        private static string ClearNonAlphabetChars(this string text)
+        private static string ClearNonAlphabetChars(this string text, bool isDigit)
         {
             var res = "";
             foreach (var c in text)
             {
-                if (char.IsDigit(c) || c.IsEnglishLetter())
+                if ((isDigit && char.IsDigit(c)) || c.IsEnglishLetter())
                     res += c.ToString();
                 else
                     res += Environment.NewLine;
