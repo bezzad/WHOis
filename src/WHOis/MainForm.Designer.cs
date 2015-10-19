@@ -37,6 +37,7 @@
             this.cmbServer = new System.Windows.Forms.ComboBox();
             this.btnLookUp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkAccecptDigitLetteral = new System.Windows.Forms.CheckBox();
             this.btnReTryErrorCells = new System.Windows.Forms.Button();
             this.txtHostName = new System.Windows.Forms.RichTextBox();
             this.lblNamesCounter = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
             this.chkInfo = new System.Windows.Forms.CheckBox();
             this.chkIr = new System.Windows.Forms.CheckBox();
             this.chkNet = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -58,7 +58,6 @@
             this.lblProcessPercent = new System.Windows.Forms.Label();
             this.dgvResult = new System.Windows.Forms.DataGridView();
             this.colDomain = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chkAccecptDigitLetteral = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.grbExtensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -121,7 +120,6 @@
             this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.btnCancel);
             this.groupBox1.Controls.Add(this.grbExtensions);
-            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.cmbServer);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -132,6 +130,20 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "I Want To Know About";
+            // 
+            // chkAccecptDigitLetteral
+            // 
+            this.chkAccecptDigitLetteral.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkAccecptDigitLetteral.AutoSize = true;
+            this.chkAccecptDigitLetteral.Checked = true;
+            this.chkAccecptDigitLetteral.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAccecptDigitLetteral.Location = new System.Drawing.Point(9, 353);
+            this.chkAccecptDigitLetteral.Name = "chkAccecptDigitLetteral";
+            this.chkAccecptDigitLetteral.Size = new System.Drawing.Size(122, 17);
+            this.chkAccecptDigitLetteral.TabIndex = 13;
+            this.chkAccecptDigitLetteral.Text = "Accept Digit Letteral";
+            this.chkAccecptDigitLetteral.UseVisualStyleBackColor = true;
+            this.chkAccecptDigitLetteral.CheckedChanged += new System.EventHandler(this.chkAccecptDigitLetteral_CheckedChanged);
             // 
             // btnReTryErrorCells
             // 
@@ -272,18 +284,6 @@
             this.chkNet.Text = ". net";
             this.chkNet.UseVisualStyleBackColor = true;
             // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(6, 350);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(106, 13);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Provide Hostnames *";
-            this.label6.Visible = false;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::WHOis.Properties.Resources._1377639655_Connected;
@@ -393,19 +393,6 @@
             this.colDomain.ReadOnly = true;
             this.colDomain.Width = 85;
             // 
-            // chkAccecptDigitLetteral
-            // 
-            this.chkAccecptDigitLetteral.AutoSize = true;
-            this.chkAccecptDigitLetteral.Checked = true;
-            this.chkAccecptDigitLetteral.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAccecptDigitLetteral.Location = new System.Drawing.Point(188, 350);
-            this.chkAccecptDigitLetteral.Name = "chkAccecptDigitLetteral";
-            this.chkAccecptDigitLetteral.Size = new System.Drawing.Size(122, 17);
-            this.chkAccecptDigitLetteral.TabIndex = 13;
-            this.chkAccecptDigitLetteral.Text = "Accept Digit Letteral";
-            this.chkAccecptDigitLetteral.UseVisualStyleBackColor = true;
-            this.chkAccecptDigitLetteral.CheckedChanged += new System.EventHandler(this.chkAccecptDigitLetteral_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,7 +429,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ProgressBar progResult;
         private System.Windows.Forms.GroupBox grbResult;
         private System.Windows.Forms.DataGridView dgvResult;
