@@ -28,8 +28,7 @@ namespace WHOis
 
         public static string[] GetNamesByPreCompile(this string text, bool isDigit)
         {
-            text = text.ClearNonAlphabetChars(isDigit);
-            var names = text.Split(FilteringChars, StringSplitOptions.RemoveEmptyEntries);
+            var names = text.ClearNonAlphabetChars(isDigit); //text.Split(FilteringChars, StringSplitOptions.RemoveEmptyEntries);
 
             var preCompiledNames = new SortedList<string, string>();
 
@@ -38,7 +37,7 @@ namespace WHOis
                 if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) continue;
 
                 var lowerName = name.ToLower();
-                foreach (char c in lowerName)
+                foreach (var c in lowerName)
                 {
                     if (ReplaceChars.ContainsKey(c))
                     {
@@ -56,15 +55,22 @@ namespace WHOis
             return ary;
         }
 
-        private static string ClearNonAlphabetChars(this string text, bool isDigit)
+        private static IList<string> ClearNonAlphabetChars(this string text, bool isDigit)
         {
-            var res = "";
-            foreach (var c in text)
+            var res = new List<string>();
+            var lastWord = "";
+            for (var i = 0; i < text.Length; i++)
             {
-                if ((isDigit && char.IsDigit(c)) || c.IsEnglishLetter())
-                    res += c.ToString();
+                if ((isDigit && char.IsDigit(text[i])) || text[i].IsEnglishLetter())
+                    lastWord += text[i].ToString();
                 else
-                    res += Environment.NewLine;
+                {
+                    if (!string.IsNullOrEmpty(lastWord))
+                    {
+                        res.Add(lastWord);
+                        lastWord = "";
+                    }
+                }
             }
 
             return res;
@@ -72,8 +78,7 @@ namespace WHOis
 
         private static bool IsEnglishLetter(this char c)
         {
-            return EnglishLetterals.ToUpper().Any(letteral => letteral.Equals(c)) ||
-                   EnglishLetterals.ToLower().Any(letteral => letteral.Equals(c));
+            return EnglishLetterals.Any(letteral => letteral.Equals(c));
         }
 
         public static string[] PrintGridViewToText(this DataGridView dgv)

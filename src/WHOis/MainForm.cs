@@ -7,6 +7,7 @@ using System.Threading;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
 
 namespace WHOis
 {
@@ -14,9 +15,10 @@ namespace WHOis
     {
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
-        readonly List<string> _selectedExtensions;
-        bool closing = false;        
-        object _lockObj = new object();
+        private readonly List<string> _selectedExtensions;
+        private bool _closing;
+        private readonly object _lockObj = new object();
+        private string[] hostNames;
 
         public MainForm()
         {
@@ -35,34 +37,30 @@ namespace WHOis
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
                 _cts = new CancellationTokenSource();
                 btnPreCompile.PerformClick();
-                string[] _names = txtHostName.Text.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
-                InvokeIfRequire(() => lblNamesCounter.Text = _names.Length.ToString());
+                InvokeIfRequire(() => lblNamesCounter.Text = hostNames.Length.ToString());
                 UiActivation(false);
 
 
-                if (_names.Length == 0 || _selectedExtensions.Count == 0) return;
+                if (hostNames.Length == 0 || _selectedExtensions.Count == 0) return;
 
-                InvokeIfRequire(() => progResult.Maximum = _names.Length * _selectedExtensions.Count);
+                InvokeIfRequire(() => progResult.Maximum = hostNames.Length * _selectedExtensions.Count);
                 IncreaseProgress(true);
 
-                await Task.Run(() =>
-                {
-                    foreach (var url in _names)
-                    {
-                        if (_cts.IsCancellationRequested) return;
 
-                        InvokeIfRequire(() => dgvResult.Rows.Add(url));
-                    }
-                });
+                // add domains to grid UI Thread
+                Cursor = Cursors.WaitCursor;
+
+                foreach (var url in hostNames)
+                {
+                    if (_cts.IsCancellationRequested) return;
+                    dgvResult.Rows.Add(url);
+                }
+                Cursor = Cursors.Default;
+
 
                 var server = cmbServer.Text;
                 var tasks = new List<Task>();
-                var lstRows = new List<DataGridViewRow>();
-
-                foreach (DataGridViewRow row in dgvResult.Rows)
-                {
-                    lstRows.Add(row);
-                }
+                var lstRows = dgvResult.Rows.Cast<DataGridViewRow>().ToList();
 
                 WhoisHelper.Progress += WhoisHelper_Progress;
                 await WhoisHelper.WhoisParallel(lstRows, _selectedExtensions, server, _cts);
@@ -137,9 +135,11 @@ namespace WHOis
         }
         private void btnPreCompile_Click(object sender, EventArgs e)
         {
-            var names = txtHostName.Text.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
-            InvokeIfRequire(() => lblNamesCounter.Text = names.Length.ToString());
-            InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", names));
+            var input = "";
+            input = txtHostName.Text.ToLower();
+            hostNames = input.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
+            InvokeIfRequire(() => lblNamesCounter.Text = hostNames.Length.ToString());
+            InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", hostNames));
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -188,7 +188,7 @@ namespace WHOis
         {
             base.OnClosing(e);
 
-            closing = true;
+            _closing = true;
         }
 
 
@@ -252,16 +252,19 @@ namespace WHOis
         {
             try
             {
-                if (InvokeRequired && !closing)
+                if (InvokeRequired && !_closing)
                 {
                     Invoke(act);
                 }
-                else if (!closing)
+                else if (!_closing)
                 {
                     act();
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         private void chkAccecptDigitLetteral_CheckedChanged(object sender, EventArgs e)
