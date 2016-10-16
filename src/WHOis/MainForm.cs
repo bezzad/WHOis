@@ -11,14 +11,14 @@ using System.Linq;
 
 namespace WHOis
 {
-    public partial class MainForm : Form
+    public sealed partial class MainForm : Form
     {
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsOnDoubleClick;
         private readonly List<string> _selectedExtensions;
         private bool _closing;
         private readonly object _lockObj = new object();
-        private string[] hostNames;
+        private string[] _hostNames;
 
         public MainForm()
         {
@@ -26,10 +26,10 @@ namespace WHOis
 
             _selectedExtensions = new List<string>();
 
-            this.Text = $"WHOis  Online Domain Database   version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+            Text = $"WHOis  Online Domain Database   version {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
         }
 
-
+        
         private async void btnLookUp_Click(object sender, EventArgs e)
         {
             try
@@ -37,26 +37,23 @@ namespace WHOis
                 InvokeIfRequire(() => dgvResult.Rows.Clear());
                 _cts = new CancellationTokenSource();
                 btnPreCompile.PerformClick();
-                InvokeIfRequire(() => lblNamesCounter.Text = hostNames.Length.ToString());
+                InvokeIfRequire(() => lblNamesCounter.Text = _hostNames.Length.ToString());
                 UiActivation(false);
 
+                if (_hostNames.Length == 0 || _selectedExtensions.Count == 0) return;
 
-                if (hostNames.Length == 0 || _selectedExtensions.Count == 0) return;
-
-                InvokeIfRequire(() => progResult.Maximum = hostNames.Length * _selectedExtensions.Count);
+                InvokeIfRequire(() => progResult.Maximum = _hostNames.Length * _selectedExtensions.Count);
                 IncreaseProgress(true);
-
 
                 // add domains to grid UI Thread
                 Cursor = Cursors.WaitCursor;
 
-                foreach (var url in hostNames)
+                foreach (var url in _hostNames)
                 {
                     if (_cts.IsCancellationRequested) return;
                     dgvResult.Rows.Add(url);
                 }
                 Cursor = Cursors.Default;
-
 
                 var server = cmbServer.Text;
                 var tasks = new List<Task>();
@@ -137,9 +134,9 @@ namespace WHOis
         {
             var input = "";
             input = txtHostName.Text.ToLower();
-            hostNames = input.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
-            InvokeIfRequire(() => lblNamesCounter.Text = hostNames.Length.ToString());
-            InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", hostNames));
+            _hostNames = input.GetNamesByPreCompile(chkAccecptDigitLetteral.Checked);
+            InvokeIfRequire(() => lblNamesCounter.Text = _hostNames.Length.ToString());
+            InvokeIfRequire(() => txtHostName.Text = string.Join("\r\n", _hostNames));
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -181,7 +178,6 @@ namespace WHOis
             {
                 UiActivation(true);
             }
-
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -203,6 +199,7 @@ namespace WHOis
             }
             InvokeIfRequire(() => lblProcessPercent.Text = $"{progResult.Value} / {progResult.Maximum} domain");
         }
+
         private async Task UpdateCell(DataGridViewCell cell)
         {
             cell.Style.BackColor = System.Drawing.Color.OrangeRed;
