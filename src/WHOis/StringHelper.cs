@@ -11,7 +11,7 @@ namespace WHOis
         private const string Seperator = ",";
         static readonly Dictionary<char, char> ReplaceChars;
         private static readonly string[] FilteringChars;
-        private const string EnglishLetterals = "abcdefghijklmnopqrstuvwxyz";
+        private const string EnglishLetterals = "abcdefghijklmnopqrstuvwxyz-";
 
         static StringHelper()
         {
@@ -20,7 +20,7 @@ namespace WHOis
             {
                 "\r\n"
                 //, ",", ":", "'", "\"", ";", ".", "&", "~",
-                //"!", "@", "#", "$", "%", "^", "*", "(", ")", "-",
+                //"!", "@", "#", "$", "%", "^", "*", "(", ")",
                 //"+", "_", "+", "=", @"\", "|", "{", "}", "`", "?",
                 //"/", "<", ">", "[", "]", " ", "\t", "\n", "\r"
             };
