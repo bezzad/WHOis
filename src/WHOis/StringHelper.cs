@@ -28,6 +28,8 @@ namespace WHOis
 
         public static string[] GetNamesByPreCompile(this string text, bool isDigit)
         {
+            text += Environment.NewLine;
+
             var names = text.ClearNonAlphabetChars(isDigit); //text.Split(FilteringChars, StringSplitOptions.RemoveEmptyEntries);
 
             var preCompiledNames = new SortedList<string, string>();
